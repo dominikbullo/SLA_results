@@ -51,11 +51,6 @@ def add_category_to_racers():
 
 class ResultsFinder:
     def __init__(self, competitions_links_list):
-        # self.data = []
-        # self.data_sorted_by_date_of_birth = []
-        # self.header_list = []
-        # self.competition_list = []
-        # self.results_of_racers = []
         self.competition_list = []
         self.competitions_links_list = competitions_links_list
 
@@ -69,15 +64,16 @@ class ResultsFinder:
     def create_competitions_list(self):
         # TODO: create list of all comptetiions as object Competition - add category,date and so on
         for competition_link in self.competitions_links_list:
+            # for every competition create class Competition
             soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
             competition = Competition(link=competition_link)
             self.competition_list.append(competition)
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
-                # for every competition add class results
+                # for every class Competition add class Result
+                # autofill every detail about competition and result
                 competition.results_list.append(
                     competition.Result(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
-        print("done")
 
 
 # def search_on_web(self):
