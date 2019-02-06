@@ -491,8 +491,6 @@ class ResultsFinder:
 
 
 if __name__ == "__main__":
-    # main()
-    # competitions "predžiaci" starts from
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
     # to
     # 650+8
@@ -511,6 +509,7 @@ if __name__ == "__main__":
     }
 
     for competition_links in categories.values():
+        print('Zoznam podujatí:', *competition_links, sep='\n- ')
         ResultsFinder(competition_links).create_competitions_list()
 
     # test = ResultsFinder(categories)
