@@ -38,10 +38,16 @@ class Competition:
                     value = cell.string
                     header_list.append(value)
 
-            # Indexex from page -> same on every site
+            # Indexes from page -> same on every site
             self.date = header_list[6]
             self.category = header_list[5]
             self.gender = header_list[3]
             self.discipline = header_list[4]
 
             self.data = soup.find("table", {"class": "list"})
+
+        def get_raw_data(self):
+            # TODO: get data
+            # TODO: Think about structure of data -> best for findings
+            rows = self.data.findChildren('tr')
+            print(rows)
