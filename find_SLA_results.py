@@ -78,6 +78,8 @@ class ResultsFinder:
                 # self.events_list.append(
                 #     Competition(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
 
+        print('Zoznam výsledkových listín:', *self.events_list, sep='\n- ')
+
     # def search_on_web(self):
     #     for competition in competition_list:
     #         zapisuj = ""
