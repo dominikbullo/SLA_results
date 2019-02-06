@@ -14,26 +14,44 @@ from termcolor import colored
 
 from local_settings import *
 
-words_to_sort = ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]
-words_to_sort = [x.lower() for x in words_to_sort]
+words_to_sort = [x.lower() for x in ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]]
 
-start_time = time.time()
-MP = datetime.now().year - 8
-SP = MP - 3
-MZ = SP - 2
-SZ = MZ - 2
+
+def add_dates_to_categories(MP_date_from=datetime.now().year):
+    global MP, SP, MZ, SZ
+    MP = MP_date_from - 8
+    SP = MP - 3
+    MZ = SP - 2
+    SZ = MZ - 2
+
+
+# start_time = time.time()
+# TODO: ask for dates and categories
+add_dates_to_categories()
 
 for item in racers_list:
     item[0] = item[0].lower()
 
-competitions_pages = ('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$512.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$513.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$514.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$515.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$516.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$517.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$518.html',
-                      'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$519.html')
+# competitions "predžiaci" starts from
+# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
+# to
+# 650+8
+# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$658.html
+
+# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$645.html
+# to
+# 644 + 6
+# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
+
+# TODO: create competitions pages for each category individually and ask for start number in url
+# competitions_pages = ('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$512.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$513.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$514.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$515.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$516.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$517.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$518.html',
+#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$519.html')
 
 data = []
 data_sorted_by_date_of_birth = []
@@ -42,7 +60,7 @@ competition_list = []
 results_of_racers = []
 
 
-def vytvor_zoznam_pretekov():
+def create_competitions_list():
     a = 1
     for x in competitions_pages:
         a = a + 1
@@ -56,7 +74,7 @@ def vytvor_zoznam_pretekov():
             competition_list.append('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
 
 
-def add_category():
+def add_category_to_racers():
     help = 0
     for x in racers_list:
         if datetime.strptime(racers_list[help][1], '%d.%m.%Y').year <= datetime(SZ, 1, 1).year:
@@ -190,7 +208,7 @@ def search(racer):
             if name_to_find.lower() in x:
                 najdene = True
                 print(colored("Našiel som meno: " + name_to_find, "green"))
-                nasiel_som_pretekara_ale_DNS_DNF = zisti_poradie_stratu(1, data.index(x), data)
+                nasiel_som_pretekara_ale_DNS_DNF = find_rank_and_loss(1, data.index(x), data)
                 break
 
         if nasiel_som_pretekara_ale_DNS_DNF:
@@ -208,8 +226,8 @@ def search(racer):
                         najdene = True
                         print(colored("Našiel som meno v zozname ročníkov: " + name_to_find, "green"))
                         if prvy_v_rocniku == "":
-                            zisti_poradie_stratu(1, data_sorted_by_date_of_birth.index(x),
-                                                 data_sorted_by_date_of_birth)
+                            find_rank_and_loss(1, data_sorted_by_date_of_birth.index(x),
+                                               data_sorted_by_date_of_birth)
                         break
 
     else:
@@ -222,7 +240,7 @@ def search(racer):
         create_results_of_racers_list(data, 0, 0, 1, False, name_to_find, 0)
 
 
-def zisti_poradie_stratu(prva, index, data_from):
+def find_rank_and_loss(first, index, data_from):
     # tu niekde je chyba ktorá vkladá do poľa aj pretekárky ktoré tam nemajú byť, matea valča 45-46 v array
 
     # riešenie textu, pokiaľ ej sortovanie v ročníku, pridanie strinug
@@ -265,7 +283,7 @@ def zisti_poradie_stratu(prva, index, data_from):
         print(data_from[index][3], "strata:" + text, "+" + str(differece), str(
             difference_in_percent) + "%")
 
-        create_results_of_racers_list(data_from, index, difference_in_percent, prva, True, data_from[index][3],
+        create_results_of_racers_list(data_from, index, difference_in_percent, first, True, data_from[index][3],
                                       strata=differece)
         return True
     else:
@@ -497,13 +515,13 @@ def write_headers_to_EXCEL(merge_format, cell_format_header, index, name_formate
 
 
 def main():
-    add_category()
-    vytvor_zoznam_pretekov()
+    add_category_to_racers()
+    create_competitions_list()
     search_on_web()
     zapis_do_excelu(results_of_racers)
 
 
 if __name__ == "__main__":
     main()
-    # add_category()
+    # add_category_to_racers()
     # zapis_do_excelu(results_of_racers_test)
