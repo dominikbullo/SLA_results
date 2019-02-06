@@ -72,8 +72,16 @@ class ResultsFinder:
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every class Competition add class Result
                 # autofill every detail about competition and result
-                competition.results_list.append(
-                    competition.Result(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
+                # competition.results_list.append(competition.Result(
+                #     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
+
+                ###########
+                # TESTING #
+                ###########
+                result = competition.Result(
+                    link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
+                competition.results_list.append(result)
+                result.get_raw_data()
 
 
 # def search_on_web(self):
