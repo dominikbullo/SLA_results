@@ -54,13 +54,14 @@ def add_category_to_racers():
 
 
 class ResultsFinder:
-    def __init__(self):
-        self.data = []
-        self.data_sorted_by_date_of_birth = []
-        self.header_list = []
-        self.competition_list = []
-        self.results_of_racers = []
-        self.events_list = []
+    def __init__(self, competitions_links_list):
+        # self.data = []
+        # self.data_sorted_by_date_of_birth = []
+        # self.header_list = []
+        # self.competition_list = []
+        # self.results_of_racers = []
+        # self.events_list = []
+        self.competitions_links_list = competitions_links_list
 
         self.words_to_sort = [x.lower() for x in ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]]
 
@@ -76,7 +77,7 @@ class ResultsFinder:
 
         for link in soup.findAll('a', href=True, title='Výsledky'):
             self.events_list.append('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
-    
+
     def search_on_web(self):
         for competition in competition_list:
             zapisuj = ""
@@ -512,10 +513,13 @@ if __name__ == "__main__":
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
         "Žiaci": find_competitions_links(645, 6)
-
     }
-    test = ResultsFinder().find_results(categories)
-    print('Predžiaci:', *test, sep='\n- ')
+
+    for competition_links in categories.values():
+        ResultsFinder(competition_links)
+
+    # test = ResultsFinder(categories)
+    # print('Predžiaci:', *test, sep='\n- ')
 
     # add_category_to_racers()
     # zapis_do_excelu(results_of_racers_test)
