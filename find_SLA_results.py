@@ -6,6 +6,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+from Competition import Competition
 from local_settings import *
 
 
@@ -67,11 +68,15 @@ class ResultsFinder:
 
     def create_competitions_list(self):
         # TODO: create list of all comptetiions as object Competition - add category,date and so on
-        for x in self.competitions_links_list:
-            soup = BeautifulSoup(requests.get(x).content, "lxml")
+        for competition_link in self.competitions_links_list:
+            soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
+            self.events_list.append(Competition(link=competition_link))
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
-                self.events_list.append('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
+                print(link)
+                # TODO: set category, man/woman, place, type of race, date
+                # self.events_list.append(
+                #     Competition(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
 
     # def search_on_web(self):
     #     for competition in competition_list:
@@ -511,9 +516,3 @@ if __name__ == "__main__":
     for competition_links in categories.values():
         print('Zoznam podujatí:', *competition_links, sep='\n- ')
         ResultsFinder(competition_links).create_competitions_list()
-
-    # test = ResultsFinder(categories)
-    # print('Predžiaci:', *test, sep='\n- ')
-
-    # add_category_to_racers()
-    # zapis_do_excelu(results_of_racers_test)
