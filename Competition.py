@@ -21,10 +21,11 @@ class Competition:
             self.category = None
             self.gender = None
             self.discipline = None
+            self.data = None
 
-            self.get_aditional_info_about_race()
+            self.get_additional_info_about_race()
 
-        def get_aditional_info_about_race(self):
+        def get_additional_info_about_race(self):
             soup = BeautifulSoup(requests.get(self.result_link).content, "lxml")
             # print(soup.prettify())
             header = soup.find("table", {"class": "card"})
@@ -42,3 +43,5 @@ class Competition:
             self.category = header_list[5]
             self.gender = header_list[3]
             self.discipline = header_list[4]
+
+            self.data = soup.find("table", {"class": "list"})
