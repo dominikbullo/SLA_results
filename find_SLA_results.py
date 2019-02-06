@@ -34,10 +34,11 @@ for item in racers_list:
 
 
 def find_competitions_links(start_number, number_of_rounds):
+    competitions_links_list = []
     link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$"
     for round in range(start_number, start_number + number_of_rounds):
-        test_link = link + str(round) + ".html"
-        print(test_link)
+        competitions_links_list.append(link + str(round) + ".html")
+    return competitions_links_list
 
     # competitions "predžiaci" starts from
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
