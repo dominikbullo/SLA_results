@@ -32,35 +32,45 @@ add_dates_to_categories()
 for item in racers_list:
     item[0] = item[0].lower()
 
-# competitions "predžiaci" starts from
-# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
-# to
-# 650+8
-# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$658.html
 
-# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$645.html
-# to
-# 644 + 6
-# http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
+def find_competitions_links(start_number, number_of_rounds):
+    link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$"
+    for round in range(start_number, start_number + number_of_rounds):
+        test_link = link + str(round) + ".html"
+        print(test_link)
 
-# TODO: create competitions pages for each category individually and ask for start number in url
-# competitions_pages = ('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$512.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$513.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$514.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$515.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$516.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$517.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$518.html',
-#                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$519.html')
+    # competitions "predžiaci" starts from
+    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
+    # to
+    # 650+8
+    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$658.html
 
-data = []
-data_sorted_by_date_of_birth = []
-header_list = []
-competition_list = []
-results_of_racers = []
+    # competitions "žiaci" starts from
+    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$645.html
+    # to
+    # 644 + 6
+    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
+    # TODO: create 2 list of comptetiions
+
+    # TODO: create competitions pages for each category individually and ask for start number in url
+    # competitions_pages = ('http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$512.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$513.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$514.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$515.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$516.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$517.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$518.html',
+    #                       'http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$519.html')
+
+    data = []
+    data_sorted_by_date_of_birth = []
+    header_list = []
+    competition_list = []
+    results_of_racers = []
 
 
 def create_competitions_list():
+    # TODO: create list of all comptetiions as object Competition - add category,date and so on
     a = 1
     for x in competitions_pages:
         a = a + 1
@@ -522,6 +532,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    find_competitions_links(651, 8)
     # add_category_to_racers()
     # zapis_do_excelu(results_of_racers_test)
