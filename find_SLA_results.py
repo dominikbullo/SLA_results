@@ -70,18 +70,14 @@ class ResultsFinder:
         # TODO: create list of all comptetiions as object Competition - add category,date and so on
         for competition_link in self.competitions_links_list:
             soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
-            competition = Competition(link=competition_link, place="test")
+            competition = Competition(link=competition_link)
             self.competition_list.append(competition)
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every competition add class results
                 competition.results_list.append(
-                    competition.Result(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'],
-                                       date="asda",
-                                       category="tessssssssst",
-                                       gender="M",
-                                       discipline="Slalom"))
-                # TODO: if you find diferrent day, then create new competition
+                    competition.Result(link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
+        print("done")
 
 
 # def search_on_web(self):
@@ -228,8 +224,8 @@ class ResultsFinder:
 # def find_rank_and_loss(self, first, index, data_from):
 #     # tu niekde je chyba ktorá vkladá do poľa aj pretekárky ktoré tam nemajú byť, matea valča 45-46 v array
 #
-#     # riešenie textu, pokiaľ ej sortovanie v ročníku, pridanie strinug
 #
+#     # riešenie textu, pokiaľ ej sortovanie v ročníku, pridanie strinug
 #     text = ""
 #     if data_from == data_sorted_by_date_of_birth:
 #         text = " v ročníku"
