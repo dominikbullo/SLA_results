@@ -518,3 +518,5 @@ if __name__ == "__main__":
 for competition_links in categories.values():
     print('Zoznam podujatí:', *competition_links, sep='\n- ')
     ResultsFinder(competition_links).create_competitions_list_with_results()
+
+    # TODO: find racers by ski club
