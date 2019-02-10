@@ -95,5 +95,7 @@ class Competition:
                                             gender=self.gender
                                             )
                     print(racer_class.__dict__)
+                    self.racer_list.append(racer_class)
+
                 # print(racer)
                 # racer = Racer()
