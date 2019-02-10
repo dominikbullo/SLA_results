@@ -8,4 +8,6 @@ class Racer:
         self.country = country
         self.start_number = start_number
 
+        self.number_of_points = 0
+
 # test = Racer("Domminik", "Bullo", "09.12.1996", "m", "kategória", "SVK")
