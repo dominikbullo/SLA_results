@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+from Racer import Racer
+
 
 class Competition:
     def __init__(self, link):
@@ -14,7 +16,6 @@ class Competition:
 
     class Result:
         def __init__(self, link):
-            self.words_to_sort = [x.lower() for x in ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]]
             self.result_link = link
 
             self.date = None
@@ -49,14 +50,50 @@ class Competition:
 
         def create_racer_list(self):
             # TODO: get data
-            # TODO: DNS,DNF,DSQ
             # TODO: Total number of racers and another statistics
+            value = ""
 
-            rows = self.data.findChildren('tr')
-            # print(rows)
+            for row in self.data.findChildren('tr'):
+                racer = []
+                special_DNF_DNS = row.find('td', {"class": "bold", "colspan": "11"})
+                if special_DNF_DNS:
+                    # print("hura")
+                    print(special_DNF_DNS.string)
+                    value = special_DNF_DNS.string
+                    continue
 
-            for row in rows:
-                test = row.findAll("td", {"class": "right"})
-                print(test)
+                for cell in row.findChildren('td'):
+                    # TODO: DNS,DNF,DSQ
+                    racer.append(cell.string)
+
+                if racer:
+                    if len(racer) > 8:
+                        racer_class = Racer(position=racer[0],
+                                            start_number=racer[1],
+                                            code=racer[2],
+                                            full_name=racer[3],
+                                            year_of_birth=racer[4],
+                                            country=racer[5],
+                                            times={"1. round": racer[8],
+                                                   "2. round": racer[9],
+                                                   "Spolu:": racer[10]},
+                                            points=racer[10],
+                                            category=self.category,
+                                            gender=self.gender
+                                            )
+                    else:
+                        # TODO: DNF,DNS cases
+                        racer_class = Racer(position=racer[0],
+                                            start_number=racer[1],
+                                            code=racer[2],
+                                            full_name=racer[3],
+                                            year_of_birth=racer[4],
+                                            country=racer[5],
+                                            times=None,
+                                            points="",
+                                            category=self.category,
+                                            gender=self.gender
+                                            )
+                    print(racer_class.__dict__)
+                # print(racer)
                 # racer = Racer()
-                print(row)
