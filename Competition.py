@@ -14,7 +14,7 @@ class Competition:
 
     class Result:
         def __init__(self, link):
-            # TODO: if date is None -> check if every date is equal
+            self.words_to_sort = [x.lower() for x in ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]]
             self.result_link = link
 
             self.date = None
@@ -22,6 +22,7 @@ class Competition:
             self.gender = None
             self.discipline = None
             self.data = None
+            self.racer_list = []
 
             self.get_additional_info_about_race()
 
@@ -46,8 +47,16 @@ class Competition:
 
             self.data = soup.find("table", {"class": "list"})
 
-        def get_raw_data(self):
+        def create_racer_list(self):
             # TODO: get data
-            # TODO: Think about structure of data -> best for findings
+            # TODO: DNS,DNF,DSQ
+            # TODO: Total number of racers and another statistics
+
             rows = self.data.findChildren('tr')
-            print(rows)
+            # print(rows)
+
+            for row in rows:
+                test = row.findAll("td", {"class": "right"})
+                print(test)
+                # racer = Racer()
+                print(row)

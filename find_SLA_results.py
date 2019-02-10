@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
 
 import requests
@@ -54,14 +53,12 @@ class ResultsFinder:
         self.competition_list = []
         self.competitions_links_list = competitions_links_list
 
-        self.words_to_sort = [x.lower() for x in ["Nedokočili", "Neštartovali", "Diskvalifikovaní"]]
-
         for item in racers_list:
             item[0] = item[0].lower()
 
-        add_dates_to_categories()
+        # add_dates_to_categories()
 
-    def create_competitions_list(self):
+    def create_competitions_list_with_results(self):
         # TODO: create list of all comptetiions as object Competition - add category,date and so on
         for competition_link in self.competitions_links_list:
             # for every competition create class Competition
@@ -72,6 +69,7 @@ class ResultsFinder:
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every class Competition add class Result
                 # autofill every detail about competition and result
+
                 # competition.results_list.append(competition.Result(
                 #     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
 
@@ -81,7 +79,7 @@ class ResultsFinder:
                 result = competition.Result(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
                 competition.results_list.append(result)
-                result.get_raw_data()
+                result.create_racer_list()
 
 
 # def search_on_web(self):
@@ -511,8 +509,6 @@ if __name__ == "__main__":
     # to
     # 644 + 6
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
-    # TODO: create 2 list of comptetiions
-
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
         "Žiaci": find_competitions_links(645, 6)
@@ -521,4 +517,4 @@ if __name__ == "__main__":
 
 for competition_links in categories.values():
     print('Zoznam podujatí:', *competition_links, sep='\n- ')
-    ResultsFinder(competition_links).create_competitions_list()
+    ResultsFinder(competition_links).create_competitions_list_with_results()
