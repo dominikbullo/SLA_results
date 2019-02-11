@@ -70,7 +70,7 @@ class Competition:
                                         category=self.category,
                                         gender=self.gender
                                         )
-                    # TODO: ignore .
+                    # TODO: ignore . in position
                     racer_class.position = racer[0]
                     racer_class.start_number = racer[1]
                     racer_class.code = racer[2]
