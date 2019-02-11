@@ -21,7 +21,7 @@ class Racer:
 
     @property
     def full_name(self):
-        return self.name + " " + self.surname
+        return self.surname.capitalize() + " " + self.name.capitalize()
 
     @property
     def without_time(self):
