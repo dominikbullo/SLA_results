@@ -24,11 +24,11 @@ class Racer:
         return self.name + " " + self.surname
 
     @property
-    def _DNF(self):
+    def DNF(self):
         return self._DNF
 
-    @_DNF.setter
-    def _DNF(self, value):
+    @DNF.setter
+    def DNF(self, value):
         self._DNF = value
 
     @property
