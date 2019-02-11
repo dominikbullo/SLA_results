@@ -60,11 +60,9 @@ class ResultsFinder:
 
     def create_competitions_list_with_results(self):
         for competition_link in self.competitions_links_list:
-
             # for every competition create class Competition
             soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
-            competition = Competition(link=competition_link)
-            self.competition_list.append(competition)
+            competition_class = Competition(link=competition_link)
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every class Competition add class Result
@@ -77,14 +75,19 @@ class ResultsFinder:
                 # TESTING #
                 ###########
                 print(f'Printing result for race with {link["href"]}')
-                result = competition.Result(
+                # TODO: this overwriting every place and date
+                result = competition_class.Result(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
-                competition.results_list.append(result)
+                competition_class.results_list.append(result)
+                competition_class.date = result.date
+                competition_class.place = result.place
                 result.create_racer_list()
+
+            self.competition_list.append(competition_class)
 
     def print_result(self):
         for competition in self.competition_list:
-            print([(competition.place, x.category, x.discipline) for x in competition.results_list])
+            print([(competition.place, competition.date, x.category, x.discipline) for x in competition.results_list])
 
 
 # def search_on_web(self):
