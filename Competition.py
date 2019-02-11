@@ -64,38 +64,27 @@ class Competition:
                     racer.append(cell.string)
 
                 if racer:
+                    racer_class = Racer(full_name=racer[3],
+                                        year_of_birth=racer[4],
+                                        country=racer[5],
+                                        category=self.category,
+                                        gender=self.gender
+                                        )
+                    # TODO: ignore .
+                    racer_class.position = racer[0]
+                    racer_class.start_number = racer[1]
+                    racer_class.code = racer[2]
+
+                    # if race is without time
                     if len(racer) > 8:
-                        racer_class = Racer(position=racer[0],
-                                            start_number=racer[1],
-                                            code=racer[2],
-                                            full_name=racer[3],
-                                            year_of_birth=racer[4],
-                                            country=racer[5],
-                                            times={"1. round": racer[7],
-                                                   "2. round": racer[8],
-                                                   "Together:": racer[9]},
-                                            points=racer[10],
-                                            category=self.category,
-                                            gender=self.gender
-                                            )
+                        racer_class.times = {"1. round": racer[7],
+                                             "2. round": racer[8],
+                                             "Together:": racer[9]}
+                        # TODO: ignore string
+                        racer_class.points_earned = racer[10]
                     else:
-                        # TODO: _DNF,DNS cases
-                        racer_class = Racer(position=racer[0],
-                                            start_number=racer[1],
-                                            code=racer[2],
-                                            full_name=racer[3],
-                                            year_of_birth=racer[4],
-                                            country=racer[5],
-                                            times=None,
-                                            points="",
-                                            category=self.category,
-                                            gender=self.gender
-                                            )
                         racer_class.without_time = True
                         racer_class.additional_info = value
 
                     print(racer_class.__dict__)
                     self.racer_list.append(racer_class)
-
-                # print(racer)
-                # racer = Racer()
