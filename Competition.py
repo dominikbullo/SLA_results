@@ -47,7 +47,7 @@ class Competition:
 
             self.data = soup.find("table", {"class": "list"})
 
-        def create_racer_list(self):
+        def create_racer_list_with_results(self, racer_list):
             # TODO: Total number of racers and another statistics
             value = ""
 
