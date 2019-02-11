@@ -56,7 +56,6 @@ class Competition:
                 racer = []
                 without_time = row.find('td', {"class": "bold", "colspan": "11"})
                 if without_time:
-                    print(without_time.string)
                     value = without_time.string
                     continue
 
@@ -87,7 +86,9 @@ class Competition:
                         racer_class.additional_info = value
 
                     if racer_class.full_name in [racer.full_name for racer in racer_list]:
+                        racer_class.my_racer = True
                         print("found your racer---wuhuuu")
 
-                    print(racer_class.__dict__)
+                    if racer_class.my_racer:
+                        print(racer_class.__dict__)
                     self.racer_list.append(racer_class)
