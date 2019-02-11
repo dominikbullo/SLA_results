@@ -13,6 +13,8 @@ class Racer:
         self.times = None
         self.points_earned = 0
 
+        self.my_racer = False
+
         self._without_time = False
         self._additional_info = ""
         # self.total_number_of_points += points
