@@ -16,7 +16,7 @@ pip install pipenv
  ```
 Then copy project from my repo
 ```bash
-git clone -b school_presentation https://github.com/dominikbullo/SLA_results.git && cd SLA_results
+git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 
 pipenv run python find_SLA_results.py
 ```
