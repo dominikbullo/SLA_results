@@ -9,54 +9,6 @@ from Competition import Competition
 from Racer import Racer
 
 
-def add_dates_to_categories(MP_date_from=datetime.now().year):
-    global MP, SP, MZ, SZ
-    MP = MP_date_from - 8
-    SP = MP - 3
-    MZ = SP - 2
-    SZ = MZ - 2
-
-
-def find_competitions_links(start_number, number_of_rounds):
-    competitions_links_list = []
-    link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$"
-    for x in range(start_number, start_number + number_of_rounds):
-        competitions_links_list.append(link + str(x) + ".html")
-    return competitions_links_list
-
-
-#
-# def add_dates_to_categories(MP_date_from=datetime.now().year):
-#     global MP, SP, MZ, SZ
-#     MP = MP_date_from - 8
-#     SP = MP - 3
-#     MZ = SP - 2
-#     SZ = MZ - 2
-#
-#
-# def add_category_to_racers():
-#     help = 0
-#     for x in racers_list:
-#         if datetime.strptime(racers_list[help][1], '%d.%m.%Y').year <= datetime(SZ, 1, 1).year:
-#             x.append("Staršie žiactvo")
-#             # print "SZ"
-#         elif datetime.strptime(racers_list[help][1], '%d.%m.%Y').year <= datetime(MZ, 1, 1).year:
-#             x.append("Mladšie žiactvo")
-#             # print "MZ"
-#         elif datetime.strptime(racers_list[help][1], '%d.%m.%Y').year <= datetime(SP, 1, 1).year:
-#             x.append("Staršie predžiactvo")
-#             # print "SP"
-#         elif datetime.strptime(racers_list[help][1], '%d.%m.%Y').year <= datetime(MP, 1, 1).year:
-#             x.append("Mladšie predžiactvo")
-#             # print "MP"
-#         elif datetime.strptime(racers_list[help][1], '%d.%m.%Y').year >= datetime(MP, 1, 1).year:
-#             x.append("Superbejby")
-#             # print "SB"
-#         else:
-#             print("Neviem rozpoznať dátum")
-#         help = help + 1
-#
-
 class ResultsFinder:
     def __init__(self, competitions_links_list):
         self.competitions_links_list = competitions_links_list
