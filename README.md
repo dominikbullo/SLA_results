@@ -5,7 +5,7 @@ This repo is for my personal and school project, it is not coded for someone els
 ## Requirements
 * Python v3.7 or greater
 * pip v18 or greater
-* pipenv tools  
+* pipenv tool
   
 ## Getting started
 
@@ -13,10 +13,10 @@ Use the new tool [pipenv](https://pipenv.readthedocs.io/en/latest/) to virtual e
 If you don't have pipenv just type
 ```bash
 pip install pipenv
-```
+ ```
 Then copy project from my repo
 ```bash
-git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
+git clone -b school_presentation https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 
 pipenv run python find_SLA_results.py
 ```
