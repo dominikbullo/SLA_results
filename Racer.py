@@ -1,17 +1,17 @@
 class Racer:
-    def __init__(self, full_name, year_of_birth, gender, category, country, code, start_number, position, times,
-                 points):
+    def __init__(self, full_name, year_of_birth, gender, category, country):
         self.surname, self.name = full_name.split(" ", 1)
 
         self.year_of_birth = year_of_birth
-        self.code = code
         self.gender = gender
         self.category = category
         self.country = country
-        self.start_number = start_number
-        self.position = position
-        self.times = times
-        self.points_earned = points
+
+        self.start_number = None
+        self.code = None
+        self.position = None
+        self.times = None
+        self.points_earned = 0
 
         self._without_time = False
         self._additional_info = ""
