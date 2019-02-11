@@ -7,17 +7,14 @@ from bs4 import BeautifulSoup
 from Competition import Competition
 from Racer import Racer
 
+from local_settings import *
+
 
 class ResultsFinder:
     def __init__(self, competitions_links_list, racer_list):
         self.competitions_links_list = competitions_links_list
         self.racer_list = racer_list
         self.competition_list = []
-
-        # for item in racers_list:
-        #     item[0] = item[0].lower()
-
-        # add_dates_to_categories()
 
     def create_competitions_list_with_results(self):
         for competition_link in self.competitions_links_list:
@@ -55,12 +52,44 @@ class ResultsFinder:
 
 
 def create_racers_list():
-    racer_list_temp = [Racer("Dominik Bullo", '2010', "muži", "Mladšie predžiactvo", "SVK"),
-                       Racer("Dominik Bullo1", '2010', "muži", "Mladšie predžiactvo", "SVK"),
-                       Racer("Dominik Bullo2", '2010', "muži", "Mladšie predžiactvo", "SVK"),
-                       Racer("Dominik Bullo3", '2010', "muži", "Mladšie predžiactvo", "SVK"),
-                       Racer("Dominik Bullo4", '2010', "muži", "Mladšie predžiactvo", "SVK")]
-    return racer_list_temp
+    def create_and_add_categories():
+        global MP, SP, MZ, SZ, racer
+        # TODO: ask for correction date
+        MP = datetime.now().year - 8
+        SP = MP - 3
+        MZ = SP - 2
+        SZ = MZ - 2
+        for i, racer in enumerate(racers):
+            if datetime.strptime(racers[i][1], '%Y').year <= datetime(SZ, 1, 1).year:
+                racer.append("Staršie žiactvo")
+                # print("SZ")
+            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(MZ, 1, 1).year:
+                racer.append("Mladšie žiactvo")
+                # print("MZ")
+            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(SP, 1, 1).year:
+                racer.append("Staršie predžiactvo")
+                # print("SP")
+            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(MP, 1, 1).year:
+                racer.append("Mladšie predžiactvo")
+                # print("MP")
+            elif datetime.strptime(racers[i][1], '%Y').year >= datetime(MP, 1, 1).year:
+                racer.append("Superbejby")
+                # print("SB")
+            else:
+                print("Neviem rozpoznať dátum")
+
+    create_and_add_categories()
+    my_racers_list = []
+    for racer in racers:
+        my_racers_list.append(Racer(full_name=racer[0],
+                                    year_of_birth=racer[1],
+                                    country="SVK",
+                                    category=racer[3],
+                                    gender=racer[2]))
+
+    print('Zoznam pretekárov:', *[[x.full_name, x.category] for x in my_racers_list], sep='\n- ')
+
+    return my_racers_list
 
 
 def find_competitions_links(start_number, number_of_rounds):
