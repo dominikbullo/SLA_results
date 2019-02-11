@@ -37,14 +37,17 @@ class ResultsFinder:
                 competition_class.results_list.append(result)
                 competition_class.date = result.date
                 competition_class.place = result.place
+                # print(f'Printing result for race on {result.date} in {result.place} for category {result.category}')
                 result.create_racer_list_with_results(self.racer_list)
 
             self.competition_list.append(competition_class)
 
     def print_results_list(self):
-        print("Results list:")
-        for competition in self.competition_list:
-            print([(competition.place, competition.date, x.category, x.discipline) for x in competition.results_list])
+        # print("Results list:")
+        # for competition in self.competition_list:
+        #     print(competition)
+        # print([(competition.place, competition.date, x.category, x.discipline) for x in competition.results_list])
+        pass
 
 
 def create_racers_list():
