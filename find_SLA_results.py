@@ -75,6 +75,7 @@ class ResultsFinder:
                 # TESTING #
                 ###########
                 print(f'Printing result for race with {link["href"]}')
+                print(f'Printing result for race with {link["href"]}')
                 # TODO: this overwriting every place and date
                 result = competition_class.Result(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
