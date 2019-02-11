@@ -12,6 +12,9 @@ class Competition:
         self.date = None
         self.place = None
 
+    def __str__(self):
+        return "- " + str(self.place) + " " + str(self.date)
+
     class Result:
         def __init__(self, link):
             self.result_link = link
@@ -87,6 +90,8 @@ class Competition:
 
                     if racer_class.full_name in [racer.full_name for racer in racer_list]:
                         racer_class.my_racer = True
-                        print(racer_class.__dict__)
+                        print(
+                            f'Printing result for race on {self.date} in {self.place} for category {self.category}')
+                        print(racer_class)
 
                     self.racer_list.append(racer_class)
