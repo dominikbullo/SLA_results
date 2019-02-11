@@ -28,12 +28,8 @@ class ResultsFinder:
 
                 # competition.results_list.append(competition.Result(
                 #     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
+                # print(f'Printing result for race with {link["href"]}')
 
-                ###########
-                # TESTING #
-                ###########
-                print(f'Printing result for race with {link["href"]}')
-                # TODO: this overwriting every place and date
                 result = competition_class.Result(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
 
