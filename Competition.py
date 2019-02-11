@@ -11,14 +11,12 @@ class Competition:
         self.date = None
         self.place = None
 
-    def set_date(self, date):
-        self.date = date
-
     class Result:
         def __init__(self, link):
             self.result_link = link
 
             self.date = None
+            self.place = None
             self.category = None
             self.gender = None
             self.discipline = None
@@ -41,6 +39,7 @@ class Competition:
                     header_list.append(value)
 
             # Indexes from page -> same on every site
+            self.place = header_list[0]
             self.date = header_list[6]
             self.category = header_list[5]
             self.gender = header_list[3]
@@ -54,10 +53,10 @@ class Competition:
 
             for row in self.data.findChildren('tr'):
                 racer = []
-                special_DNF_DNS = row.find('td', {"class": "bold", "colspan": "11"})
-                if special_DNF_DNS:
-                    print(special_DNF_DNS.string)
-                    value = special_DNF_DNS.string
+                without_time = row.find('td', {"class": "bold", "colspan": "11"})
+                if without_time:
+                    print(without_time.string)
+                    value = without_time.string
                     continue
 
                 for cell in row.findChildren('td'):
@@ -72,9 +71,9 @@ class Competition:
                                             full_name=racer[3],
                                             year_of_birth=racer[4],
                                             country=racer[5],
-                                            times={"1. round": racer[8],
-                                                   "2. round": racer[9],
-                                                   "Spolu:": racer[10]},
+                                            times={"1. round": racer[7],
+                                                   "2. round": racer[8],
+                                                   "Together:": racer[9]},
                                             points=racer[10],
                                             category=self.category,
                                             gender=self.gender
@@ -94,7 +93,7 @@ class Competition:
                                             )
                         racer_class.without_time = True
                         racer_class.additional_info = value
-                        
+
                     print(racer_class.__dict__)
                     self.racer_list.append(racer_class)
 
