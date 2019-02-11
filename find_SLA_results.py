@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from Competition import Competition
-from local_settings import *
+from Racer import Racer
 
 
 def add_dates_to_categories(MP_date_from=datetime.now().year):
@@ -85,9 +85,15 @@ class ResultsFinder:
 
             self.competition_list.append(competition_class)
 
-    def print_result(self):
+    def print_results_list(self):
+        print("Results list:")
         for competition in self.competition_list:
             print([(competition.place, competition.date, x.category, x.discipline) for x in competition.results_list])
+
+    def find_result_of_my_racers(self, racers_list=[]):
+        # for racer in racers_list:
+        #     racer
+        pass
 
 
 # def search_on_web(self):
@@ -506,6 +512,18 @@ class ResultsFinder:
 #     worksheet.write(start_row + 8, column_headers, "umiestnenie ")
 #     worksheet.write(start_row + 9, column_headers, "celkový počet pretekárov ")
 
+def create_racer_list(racer_list=[]):
+    racer_list = []
+    # for racer in list:
+    #     racer.append(Racer(racer[0], racer[1], racer[2], "test", "SVK"))
+    racer_list.append(Racer("Dominik Bullo", '2010', "muži", "Mladšie predžiactvo", "SVK"))
+    racer_list.append(Racer("Dominik Bullo1", '2010', "muži", "Mladšie predžiactvo", "SVK"))
+    racer_list.append(Racer("Dominik Bullo2", '2010', "muži", "Mladšie predžiactvo", "SVK"))
+    racer_list.append(Racer("Dominik Bullo3", '2010', "muži", "Mladšie predžiactvo", "SVK"))
+    racer_list.append(Racer("Dominik Bullo4", '2010', "muži", "Mladšie predžiactvo", "SVK"))
+    return racer_list
+
+
 if __name__ == "__main__":
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
     # to
@@ -522,11 +540,14 @@ if __name__ == "__main__":
         # "Žiaci": find_competitions_links(645, 6)
     }
 
-for competition_links in categories.values():
-    print('Zoznam podujatí:', *competition_links, sep='\n- ')
-    finder = ResultsFinder(competition_links)
-    finder.create_competitions_list_with_results()
-    # finder.write_results_into_excel()
-    finder.print_result()
+    racer_list = create_racer_list()
 
-    # TODO: find racers by ski club
+    for competition_links in categories.values():
+        print('Zoznam podujatí:', *competition_links, sep='\n- ')
+        finder = ResultsFinder(competition_links)
+        finder.create_competitions_list_with_results()
+        finder.print_results_list()
+        finder.find_result_of_my_racers(racer_list)
+        # finder.write_results_into_excel()
+
+        # TODO: find racers by ski club
