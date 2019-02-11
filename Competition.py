@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from Racer import Racer
+from local_settings import *
 
 
 class Competition:
@@ -70,8 +71,7 @@ class Competition:
                                         category=self.category,
                                         gender=self.gender
                                         )
-                    # TODO: ignore . in position
-                    racer_class.position = racer[0]
+                    racer_class.position = str(racer[0]).replace(".", "")
                     racer_class.start_number = racer[1]
                     racer_class.code = racer[2]
 
@@ -85,6 +85,9 @@ class Competition:
                     else:
                         racer_class.without_time = True
                         racer_class.additional_info = value
+
+                    if racer_class.full_name in [racer.full_name for racer in racer_list]:
+                        print("found your racer---wuhuuu")
 
                     print(racer_class.__dict__)
                     self.racer_list.append(racer_class)
