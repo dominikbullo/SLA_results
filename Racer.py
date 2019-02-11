@@ -36,5 +36,3 @@ class Racer:
     @additional_info.setter
     def additional_info(self, value):
         self._additional_info = value
-
-# test = Racer("Domminik", "Bullo", "09.12.1996", "m", "kategória", "SVK")
