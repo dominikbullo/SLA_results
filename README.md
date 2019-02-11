@@ -20,11 +20,21 @@ git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 
 pipenv run python find_SLA_results.py
 ```
+Crete list of racer which you want to find.
+Example:
+```bash
+racers = [["Bullo Dominik", '1996', 'muži'],
+          ["Bullo Dominik", '1996', 'muži']]
+```
+
+* racers[0][0] = surname and name of racer
+* racers[0][1] = year of birth
+* racers[0][2] = gender (man=muži/woman=ženy)
+
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/#)
