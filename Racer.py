@@ -19,6 +19,12 @@ class Racer:
         self._additional_info = ""
         # self.total_number_of_points += points
 
+    def __str__(self):
+        if self._without_time:
+            return self.full_name + " -> " + str(self._additional_info)
+        else:
+            return self.full_name + " -> " + str(self.position)
+
     @property
     def full_name(self):
         return self.surname.capitalize() + " " + self.name.capitalize()
