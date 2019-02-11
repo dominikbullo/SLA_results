@@ -49,7 +49,6 @@ class Competition:
             self.data = soup.find("table", {"class": "list"})
 
         def create_racer_list(self):
-            # TODO: get data
             # TODO: Total number of racers and another statistics
             value = ""
 
@@ -57,13 +56,12 @@ class Competition:
                 racer = []
                 special_DNF_DNS = row.find('td', {"class": "bold", "colspan": "11"})
                 if special_DNF_DNS:
-                    # print("hura")
                     print(special_DNF_DNS.string)
                     value = special_DNF_DNS.string
                     continue
 
                 for cell in row.findChildren('td'):
-                    # TODO: DNS,DNF,DSQ
+                    # TODO: DNS,_DNF,DSQ
                     racer.append(cell.string)
 
                 if racer:
@@ -82,7 +80,7 @@ class Competition:
                                             gender=self.gender
                                             )
                     else:
-                        # TODO: DNF,DNS cases
+                        # TODO: _DNF,DNS cases
                         racer_class = Racer(position=racer[0],
                                             start_number=racer[1],
                                             code=racer[2],
@@ -94,6 +92,9 @@ class Competition:
                                             category=self.category,
                                             gender=self.gender
                                             )
+                        racer_class.without_time = True
+                        racer_class.additional_info = value
+                        
                     print(racer_class.__dict__)
                     self.racer_list.append(racer_class)
 
