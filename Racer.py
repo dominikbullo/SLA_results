@@ -13,10 +13,38 @@ class Racer:
         self.times = times
         self.points_earned = points
 
+        self._DNF = False
+        self._DNS = False
+        self._DSQ = False
+
         # self.total_number_of_points += points
 
     @property
     def full_name(self):
         return self.name + " " + self.surname
+
+    @property
+    def _DNF(self):
+        return self._DNF
+
+    @_DNF.setter
+    def _DNF(self, value):
+        self._DNF = value
+
+    @property
+    def DNS(self):
+        return self._DNS
+
+    @DNS.setter
+    def DNS(self, value):
+        self._DNS = value
+
+    @property
+    def DSQ(self):
+        return self._DSQ
+
+    @DSQ.setter
+    def DSQ(self, value):
+        self._DSQ = value
 
 # test = Racer("Domminik", "Bullo", "09.12.1996", "m", "kategória", "SVK")
