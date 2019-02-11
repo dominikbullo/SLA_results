@@ -87,8 +87,6 @@ class Competition:
 
                     if racer_class.full_name in [racer.full_name for racer in racer_list]:
                         racer_class.my_racer = True
-                        print("found your racer---wuhuuu")
-
-                    if racer_class.my_racer:
                         print(racer_class.__dict__)
+
                     self.racer_list.append(racer_class)
