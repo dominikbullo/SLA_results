@@ -24,7 +24,7 @@ Crete list of racer which you want to find.
 Example:
 ```bash
 racers = [["Bullo Dominik", '1996', 'muži'],
-          ["Bullo Dominik", '1996', 'muži']]
+          ["Bullo Dominik", '2006', 'muži']]
 ```
 
 * racers[0][0] = surname and name of racer
