@@ -28,7 +28,7 @@ racers = (["Bullo Dominik", '1996', 'muži'],
 
 * racers[0][0] = surname and name of racer
 * racers[0][1] = year of birth
-* racers[0][2] = gender (man=m/woman=w)
+* racers[0][2] = gender (man=M/ladies=L)
 
 ### Start the script
 Finally start the script with command:
