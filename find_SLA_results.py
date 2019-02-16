@@ -8,8 +8,6 @@ from bs4 import BeautifulSoup
 from Competition import Competition
 from Racer import Racer
 
-from local_settings import *
-
 
 class ResultsFinder:
     def __init__(self, competitions_links_list, racer_list):
@@ -100,7 +98,38 @@ def find_competitions_links(start_number, number_of_rounds):
     return competitions_links_list
 
 
+def find_club_name_in_database(ski_club_name):
+    pass
+
+
 if __name__ == "__main__":
+    import argparse
+
+    # Instantiate the parser
+    parser = argparse.ArgumentParser(description='App for searching results from slovak-ski.sk')
+    # Required positional argument
+    parser.add_argument('-sc', '--ski_club_name', type=str,
+                        help='Argument for full ski club name, for searching result for racers from this club',
+                        default=None)
+    # Switch
+    parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
+                        help='If you want to specify list of racers, e.g. from multiple clubs')
+
+    args = parser.parse_args()
+    # TODO: read from file
+    print("Argument values:")
+    if args.by_racers_list:
+        try:
+            f = open("racers_to_find_list.txt", "r")
+            for x in f:
+                print(x)
+        except IOError:
+            print('fCannot read {f.name}')
+    else:
+        if args.ski_club_name is None or find_club_name_in_database(args.ski_club_name):
+            ski_club_name = input("Insert the proper name of ski club for which you want to find results")
+        print(args.ski_club_name)
+
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
     # to
     # 650+8
@@ -111,6 +140,7 @@ if __name__ == "__main__":
     # to
     # 644 + 6
     # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
+
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
         # "Žiaci": find_competitions_links(645, 6)
