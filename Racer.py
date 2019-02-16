@@ -14,6 +14,7 @@ class Racer:
         self.points_earned = 0
 
         self.my_racer = False
+        self.link_to_summary_page = ""
 
         self._without_time = False
         self._additional_info = ""
