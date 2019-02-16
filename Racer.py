@@ -12,6 +12,7 @@ class Racer:
         self.position = None
         self.times = None
         self.points_earned = 0
+        self.sci_club = None
 
         self.my_racer = False
         self.link_to_summary_page = ""
