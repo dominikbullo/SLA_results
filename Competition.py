@@ -2,8 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 
 from Racer import Racer
-from local_settings import *
-
 
 class Competition:
     def __init__(self, link):
