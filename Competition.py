@@ -15,7 +15,7 @@ class Competition:
     def __str__(self):
         return "- " + str(self.place) + " " + str(self.date)
 
-    class Result:
+    class ResultsList:
         def __init__(self, link):
             self.result_link = link
 

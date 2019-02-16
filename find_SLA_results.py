@@ -31,7 +31,7 @@ class ResultsFinder:
                 #     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
                 # print(f'Printing result for race with {link["href"]}')
 
-                result = competition_class.Result(
+                result = competition_class.ResultsList(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
 
                 # TODO: fill results for my child immediately when searching for every result
