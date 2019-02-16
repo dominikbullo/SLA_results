@@ -14,11 +14,11 @@ If you don't have pipenv just type
 ```bash
 pip install -U pipenv
  ```
-###Copy project from my repo
+### Copy project from my repo
 ```bash
 git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 ```
-###Crete list of racers
+### Crete list of racers
 In file **local_settings.py** of racer which you want to find.
 Example:
 ```bash
@@ -30,7 +30,7 @@ racers = (["Bullo Dominik", '1996', 'muži'],
 * racers[0][1] = year of birth
 * racers[0][2] = gender (man=muži/woman=ženy)
 
-###Start the script
+### Start the script
 Finally start the script with command:
 ```bash
 pipenv run python find_SLA_results.py
