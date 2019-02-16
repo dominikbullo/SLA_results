@@ -18,7 +18,7 @@ class ResultsFinder:
     def create_competitions_list_with_results(self):
         for competition_link in self.competitions_links_list:
             # for every competition create class Competition
-            soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
+            soup = BeautifulSoup(requests.get(competition_link).content, "html5lib")
             competition_class = Competition(link=competition_link)
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
@@ -49,7 +49,7 @@ class ResultsFinder:
         pass
 
 
-def create_racers_list():
+def create_racers_list(racers):
     def create_and_add_categories():
         global MP, SP, MZ, SZ, racer
         # TODO: ask for correction date
@@ -99,61 +99,81 @@ def find_competitions_links(start_number, number_of_rounds):
 
 
 def find_club_name_in_database(ski_club_name):
-    pass
+    # TODO: database of clubs into text file, to check if club is good or wrong spelled
+    return True
+
+
+def find_racers_by_club(ski_club):
+    # "žiaci":"http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18.html"
+    # "predžiaci": "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17.html"
+    # TODO: find racers_with_club_and_points_list by given urls
+    racers_with_club_and_points_list = [
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html"]
+    for link in racers_with_club_and_points_list:
+        gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
+        soup = BeautifulSoup(requests.get(link).content, "html5lib")
+        content = soup.find("table", {"class": "list"})
+        for row in content.findChildren('tr'):
+            # DANGEROUS but fast
+            try:
+                test = row.findChildren('td')
+                for cell in test[4]:
+                    if str(cell.string).capitalize() == ski_club.capitalize():
+                        racers.append([test[2].text, test[3].text, gender])
+            except IndexError:
+                pass
+                continue
+    print('Zoznam nájdených pretekárov:', *racers, sep='\n- ')
 
 
 if __name__ == "__main__":
     import argparse
 
-    # Instantiate the parser
+    # TODO: WARNING !!!!!!!!!!!!!!! by club - just racers with points!!!!!!!!!!!!!!!!!!!!!
+    # TODO: find and save link a href  and read from this link
+    # TODO: With poinst there ist list of race right on this racer <a href link>
+
     parser = argparse.ArgumentParser(description='App for searching results from slovak-ski.sk')
-    # Required positional argument
     parser.add_argument('-sc', '--ski_club_name', type=str,
                         help='Argument for full ski club name, for searching result for racers from this club',
                         default=None)
-    # Switch
     parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
                         help='If you want to specify list of racers, e.g. from multiple clubs')
 
     args = parser.parse_args()
-    # TODO: read from file
-    print("Argument values:")
-    if args.by_racers_list:
-        try:
-            f = open("racers_to_find_list.txt", "r")
-            for x in f:
-                print(x)
-        except IOError:
-            print('fCannot read {f.name}')
-    else:
-        if args.ski_club_name is None or find_club_name_in_database(args.ski_club_name):
-            ski_club_name = input("Insert the proper name of ski club for which you want to find results")
-        print(args.ski_club_name)
-
-    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$651.html
-    # to
-    # 650+8
-    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$658.html
-
-    # competitions "žiaci" starts from
-    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$645.html
-    # to
-    # 644 + 6
-    # http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$650.html
 
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
-        # "Žiaci": find_competitions_links(645, 6)
+        #"Žiaci": find_competitions_links(645, 6)
     }
 
-    my_racers_to_find_list = create_racers_list()
+    racers = []
+    if args.by_racers_list:
+        try:
+            with open('racers_to_find_list.txt', 'r') as f:
+                for line in f:
+                    inner_list = [elt.strip() for elt in line.split(',')]
+                    racers.append(inner_list)
+        except IOError:
+            print('fCannot read {f.name}')
+    else:
+        clubs = args.ski_club_name.split(",")
+        for club in clubs:
+            if args.ski_club_name is None and find_club_name_in_database(clubs):
+                ski_club_name = input("Insert the proper name of ski club for which you want to find results")
+            else:
+                ski_club_name = club
+            print(f'Start finding results for club {club}')
 
-    for competition_links in categories.values():
-        print('Zoznam podujatí:', *competition_links, sep='\n- ')
-        finder = ResultsFinder(competition_links, my_racers_to_find_list)
-        finder.create_competitions_list_with_results()
-        finder.print_results_list()
+            find_racers_by_club(club)
 
-        # finder.write_results_into_excel()
+            for competition_links in categories.values():
+                print('Zoznam podujatí:', *competition_links, sep='\n- ')
+                finder = ResultsFinder(competition_links, create_racers_list(racers))
+                finder.create_competitions_list_with_results()
+                finder.print_results_list()
 
-        # TODO: find racers by ski club
+            # finder.write_results_into_excel()
