@@ -10,6 +10,7 @@ termcolor = "*"
 xlsxwriter = "*"
 lxml = "*"
 "bump2version" = "*"
+"html5lib" = "*"
 
 [dev-packages]
 
