@@ -60,9 +60,11 @@ class Competition:
                     value = without_time.string
                     continue
 
+                link_to_summary = None
                 for cell in row.findChildren('td'):
-                    # TODO: DNS,_DNF,DSQ
                     racer.append(cell.string)
+                    if cell.find('a', href=True):
+                        link_to_summary = cell.find('a', href=True)['href']
 
                 if racer:
                     racer_class = Racer(full_name=racer[3],
@@ -71,6 +73,7 @@ class Competition:
                                         category=self.category,
                                         gender=self.gender
                                         )
+                    racer_class.link_to_summary_page = link_to_summary
                     racer_class.position = str(racer[0]).replace(".", "")
                     racer_class.start_number = racer[1]
                     racer_class.code = racer[2]
