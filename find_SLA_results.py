@@ -149,16 +149,12 @@ def find_results(racers_list):
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
         finder.create_competitions_list_with_results()
         finder.print_results_list()
-
-        # finder.write_results_into_excel()
+        finder.write_results_into_excel()
 
 
 if __name__ == "__main__":
     import argparse
 
-    # TODO: WARNING !!!!!!!!!!!!!!! by club - just racers with points!!!!!!!!!!!!!!!!!!!!!
-    # TODO: find and save link a href  and read from this link
-    # TODO: With points there ist list of race right on this racer <a href link>
     # TODO: create some database about racer and his page, club and so on for better speed
 
     parser = argparse.ArgumentParser(description='App for searching results from slovak-ski.sk')
