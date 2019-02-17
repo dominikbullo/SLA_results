@@ -18,23 +18,33 @@ pip install -U pipenv
 ```bash
 git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 ```
-### Crete list of racers
-In file **local_settings.py** of racer which you want to find.
-Example:
-```bash
-racers = (["Bullo Dominik", '1996', 'muži'],
-          ["Bullo Dominik", '2006', 'muži'])
-```
-
-* racers[0][0] = surname and name of racer
-* racers[0][1] = year of birth
-* racers[0][2] = gender (man=M/ladies=L)
 
 ### Start the script
 Finally start the script with command:
 ```bash
-pipenv run python find_SLA_results.py
+pipenv run python ResultFinder.py
 ```
+## Crete list of racers (optional)
+In file **racers_to_find_list.txt** of racer which you want to find.
+
+##### ONE RACER PER ONE LINE!
+Fill information about racers in this order:
+> SURNAME NAME, YEAR OF BIRTH, GENDER
+
+* SURNAME NAME
+  * Fill surname first then first name
+* YEAR OF BIRTH
+  * Year of birth of racer
+* SURNAME NAME
+  * M for Man, L for Ladies
+
+Example of **racers_to_find_list.txt**:
+```bash
+Bullo Dominik, 1996, M
+Bullo Dominik, 2001, L
+```
+
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
