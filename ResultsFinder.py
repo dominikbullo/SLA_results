@@ -42,8 +42,8 @@ class ResultsFinder:
                           *my_results, sep='\n- ')
 
     def write_results_into_excel(self):
-        from ExcelWritter import ExcelWritter
-        writter = ExcelWritter(self.competition_list)
+        from ExcelWriter import ExcelWriter
+        writter = ExcelWriter(self.competition_list)
         # writter.write_into_excel()
 
 
