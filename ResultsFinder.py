@@ -112,7 +112,12 @@ def find_racers_by_club(ski_club):
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:M.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html"]
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:L.html"]
+
     for link in racers_with_club_and_points_list:
         gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
         soup = BeautifulSoup(requests.get(link).content, "lxml")
@@ -141,7 +146,7 @@ def find_results(racers_list):
 
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
-        # "Žiaci": find_competitions_links(645, 6)
+        "Žiaci": find_competitions_links(645, 6)
     }
 
     for competition_links in categories.values():
