@@ -34,17 +34,16 @@ class ResultsFinder:
 
     def print_results_list(self):
         for competition in self.competition_list:
+            print('\n-----------\nZoznam výsledkov podujatia v {}\n-----------\n'.format(competition.place))
             for result_list in competition.results_list:
                 my_results = [x for x in result_list.racer_list if x.my_racer]
                 if len(my_results) > 0:
-                    print(
-                        'Zoznam výsledkov podujatia v {} pre kategóriu {} pohlavie {}'.format(competition.place,
-                                                                                              result_list.category,
-                                                                                              result_list.gender),
-                        *my_results, sep='\n- ')
+                    print('Pre kategóriu {} pohlavie {}'.format(result_list.category, result_list.gender),
+                          *my_results, sep='\n- ')
 
-    def write_results_into_excel(self):
-        pass
+
+def write_results_into_excel(self):
+    pass
 
 
 def create_racers_list(racers_list_to_create):
@@ -128,7 +127,7 @@ def find_racers_by_club(ski_club):
                 pass
                 continue
 
-    print('Zoznam nájdených pretekárov podľa klubu (majú body):', *racers_list, sep='\n- ')
+    print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *racers_list, sep='\n- ')
     return racers_list
 
 
@@ -149,7 +148,7 @@ def find_results(racers_list):
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
         finder.create_competitions_list_with_results()
         finder.print_results_list()
-        finder.write_results_into_excel()
+        # finder.write_results_into_excel()
 
 
 if __name__ == "__main__":
