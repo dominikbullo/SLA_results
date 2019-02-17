@@ -161,7 +161,7 @@ if __name__ == "__main__":
     parser.add_argument('-sc', '--ski_club_name', type=str,
                         help='Argument for full ski club name, for searching result for racers from this club',
                         default=None)
-    parser.add_argument('-cb', '--combine_search', action='store_true', default=True,
+    parser.add_argument('-cb', '--combine_search', action='store_true', default=False,
                         help='If you want to find racers by club, and add some racers from file use this')
     parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
                         help='If you want to specify list of racers, e.g. from multiple clubs_list')
