@@ -41,9 +41,10 @@ class ResultsFinder:
                     print('Pre kategóriu {} pohlavie {}'.format(result_list.category, result_list.gender),
                           *my_results, sep='\n- ')
 
-
-def write_results_into_excel(self):
-    pass
+    def write_results_into_excel(self):
+        from ExcelWritter import ExcelWritter
+        writter = ExcelWritter(self.competition_list)
+        # writter.write_into_excel()
 
 
 def create_racers_list(racers_list_to_create):
@@ -148,7 +149,7 @@ def find_results(racers_list):
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
         finder.create_competitions_list_with_results()
         finder.print_results_list()
-        # finder.write_results_into_excel()
+        finder.write_results_into_excel()
 
 
 if __name__ == "__main__":
