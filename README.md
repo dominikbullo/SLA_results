@@ -26,11 +26,11 @@ git clone https://github.com/dominikbullo/SLA_results.git && cd SLA_results
 ### Parameters
 You could run thi program with multiple parameters, which you can see down bellow or in help.
 
-Short   | Long | Description
------------- | ------------- | -------------
-`-sc`     | `--ski_club_name`  | Argument for full ski club name, for searching result for racers from this club. Only searching for racers who has at least 1 point because cannot access to all racers data by club
-`-cb`     | `--combine_search` | If you want to find racers by club, and add some racers from file at the same time. It removes duplicates automatically
-`-rl`     | `--by_racers_list` | If you want to specify list of racers, e.g. from multiple clubs_list, or compare specific people on one place
+Short        | Long             | Description
+------------ | ---------------- | -------------
+-sc          | --ski_club_name  | Argument for full ski club name, for searching result for racers from this club. Only searching for racers who has at least 1 point because cannot access to all racers data by club
+-cb          | --combine_search | If you want to find racers by club, and add some racers from file at the same time. It removes duplicates automatically
+-rl          | --by_racers_list | If you want to specify list of racers, e.g. from multiple clubs_list, or compare specific people on one place
 
 Examples:
 * `pipenv run python ResultFinder.py -sc "AC UNIZA Žilina"`
