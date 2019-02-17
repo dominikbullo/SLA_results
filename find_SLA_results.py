@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from datetime import datetime
-
 import requests
-from bs4 import BeautifulSoup
 
+from datetime import datetime
+from bs4 import BeautifulSoup
 from Competition import Competition
 from Racer import Racer
 
@@ -24,7 +21,6 @@ class ResultsFinder:
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every class Competition add class Result
                 # autofill every detail about competition and result
-
                 result = competition_class.ResultsList(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
 
@@ -32,7 +28,6 @@ class ResultsFinder:
                 competition_class.results_list.append(result)
                 competition_class.date = result.date
                 competition_class.place = result.place
-                # print(f'Printing result for race on {result.date} in {result.place} for category {result.category}')
                 result.create_racer_list_with_results(self.racer_list)
 
             self.competition_list.append(competition_class)
@@ -48,8 +43,12 @@ class ResultsFinder:
                                                                                               result_list.gender),
                         *my_results, sep='\n- ')
 
+    def write_results_into_excel(self):
+        pass
 
-def create_racers_list(racers):
+
+def create_racers_list(racers_list_to_create):
+    # TODO: better method
     def create_and_add_categories():
         global MP, SP, MZ, SZ, racer
         # TODO: ask for correction date
@@ -57,20 +56,20 @@ def create_racers_list(racers):
         SP = MP - 3
         MZ = SP - 2
         SZ = MZ - 2
-        for i, racer in enumerate(racers):
-            if datetime.strptime(racers[i][1], '%Y').year <= datetime(SZ, 1, 1).year:
+        for i, racer in enumerate(racers_list_to_create):
+            if datetime.strptime(racers_list_to_create[i][1], '%Y').year <= datetime(SZ, 1, 1).year:
                 racer.append("Staršie žiactvo")
                 # print("SZ")
-            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(MZ, 1, 1).year:
+            elif datetime.strptime(racers_list_to_create[i][1], '%Y').year <= datetime(MZ, 1, 1).year:
                 racer.append("Mladšie žiactvo")
                 # print("MZ")
-            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(SP, 1, 1).year:
+            elif datetime.strptime(racers_list_to_create[i][1], '%Y').year <= datetime(SP, 1, 1).year:
                 racer.append("Staršie predžiactvo")
                 # print("SP")
-            elif datetime.strptime(racers[i][1], '%Y').year <= datetime(MP, 1, 1).year:
+            elif datetime.strptime(racers_list_to_create[i][1], '%Y').year <= datetime(MP, 1, 1).year:
                 racer.append("Mladšie predžiactvo")
                 # print("MP")
-            elif datetime.strptime(racers[i][1], '%Y').year >= datetime(MP, 1, 1).year:
+            elif datetime.strptime(racers_list_to_create[i][1], '%Y').year >= datetime(MP, 1, 1).year:
                 racer.append("Superbejby")
                 # print("SB")
             else:
@@ -78,14 +77,14 @@ def create_racers_list(racers):
 
     create_and_add_categories()
     my_racers_list = []
-    for racer in racers:
+    for racer in racers_list_to_create:
         my_racers_list.append(Racer(full_name=racer[0],
                                     year_of_birth=racer[1],
                                     country="SVK",
                                     category=racer[3],
                                     gender=racer[2]))
 
-    print('Zoznam pretekárov:', *[[x.full_name, x.category] for x in my_racers_list], sep='\n- ')
+    print('Zoznam pretekárov v objektochg:', *[[x.full_name, x.category] for x in my_racers_list], sep='\n- ')
 
     return my_racers_list
 
@@ -128,11 +127,18 @@ def find_racers_by_club(ski_club):
             except IndexError:
                 pass
                 continue
-    print('Zoznam nájdených pretekárov:', *racers_list, sep='\n- ')
+
+    print('Zoznam nájdených pretekárov podľa klubu (majú body):', *racers_list, sep='\n- ')
     return racers_list
 
 
 def find_results(racers_list):
+    # TODO: remove duplicates from racers_list
+    clean_list = []
+    for x, element in enumerate(racers_list):
+        racers_list[x][0] = element[0].title()
+    [clean_list.append(x) for x in racers_list if x not in clean_list]
+
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
         # "Žiaci": find_competitions_links(645, 6)
@@ -141,7 +147,7 @@ def find_results(racers_list):
     for competition_links in categories.values():
         print('Zoznam podujatí:', *competition_links, sep='\n- ')
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
-        results = finder.create_competitions_list_with_results()
+        finder.create_competitions_list_with_results()
         finder.print_results_list()
 
         # finder.write_results_into_excel()
@@ -152,7 +158,7 @@ if __name__ == "__main__":
 
     # TODO: WARNING !!!!!!!!!!!!!!! by club - just racers with points!!!!!!!!!!!!!!!!!!!!!
     # TODO: find and save link a href  and read from this link
-    # TODO: With poinst there ist list of race right on this racer <a href link>
+    # TODO: With points there ist list of race right on this racer <a href link>
     # TODO: create some database about racer and his page, club and so on for better speed
 
     parser = argparse.ArgumentParser(description='App for searching results from slovak-ski.sk')
@@ -161,17 +167,15 @@ if __name__ == "__main__":
                         default=None)
     parser.add_argument('-cb', '--combine_search', action='store_true', default=True,
                         help='If you want to find racers by club, and add some racers from file use this')
-
     parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
                         help='If you want to specify list of racers, e.g. from multiple clubs_list')
-
     args = parser.parse_args()
 
     racers = []
 
     if args.by_racers_list or args.combine_search:
         try:
-            with open('racers_to_find_list.txt', 'r') as f:
+            with open('racers_to_find_list.txt', 'r', encoding='utf-8-sig')as f:
                 for line in f:
                     inner_list = [elt.strip() for elt in line.split(',')]
                     racers.append(inner_list)
