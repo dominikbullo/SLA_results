@@ -18,16 +18,12 @@ class ResultsFinder:
     def create_competitions_list_with_results(self):
         for competition_link in self.competitions_links_list:
             # for every competition create class Competition
-            soup = BeautifulSoup(requests.get(competition_link).content, "html5lib")
+            soup = BeautifulSoup(requests.get(competition_link).content, "lxml")
             competition_class = Competition(link=competition_link)
 
             for link in soup.findAll('a', href=True, title='Výsledky'):
                 # for every class Competition add class Result
                 # autofill every detail about competition and result
-
-                # competition.results_list.append(competition.Result(
-                #     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href']))
-                # print(f'Printing result for race with {link["href"]}')
 
                 result = competition_class.ResultsList(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
@@ -42,11 +38,15 @@ class ResultsFinder:
             self.competition_list.append(competition_class)
 
     def print_results_list(self):
-        # print("Results list:")
-        # for competition in self.competition_list:
-        #     print(competition)
-        # print([(competition.place, competition.date, x.category, x.discipline) for x in competition.results_list])
-        pass
+        for competition in self.competition_list:
+            for result_list in competition.results_list:
+                my_results = [x for x in result_list.racer_list if x.my_racer]
+                if len(my_results) > 0:
+                    print(
+                        'Zoznam výsledkov podujatia v {} pre kategóriu {} pohlavie {}'.format(competition.place,
+                                                                                              result_list.category,
+                                                                                              result_list.gender),
+                        *my_results, sep='\n- ')
 
 
 def create_racers_list(racers):
@@ -116,7 +116,7 @@ def find_racers_by_club(ski_club):
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html"]
     for link in racers_with_club_and_points_list:
         gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
-        soup = BeautifulSoup(requests.get(link).content, "html5lib")
+        soup = BeautifulSoup(requests.get(link).content, "lxml")
         content = soup.find("table", {"class": "list"})
         for row in content.findChildren('tr'):
             # DANGEROUS but fast
@@ -141,7 +141,7 @@ def find_results(racers_list):
     for competition_links in categories.values():
         print('Zoznam podujatí:', *competition_links, sep='\n- ')
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
-        finder.create_competitions_list_with_results()
+        results = finder.create_competitions_list_with_results()
         finder.print_results_list()
 
         # finder.write_results_into_excel()
@@ -169,7 +169,6 @@ if __name__ == "__main__":
 
     racers = []
 
-    # TODO: Remake to work
     if args.by_racers_list or args.combine_search:
         try:
             with open('racers_to_find_list.txt', 'r') as f:
