@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 
 from Racer import Racer
 
+
 class Competition:
     def __init__(self, link):
         self.competition_link = link
@@ -29,7 +30,6 @@ class Competition:
 
         def get_additional_info_about_race(self):
             soup = BeautifulSoup(requests.get(self.result_link).content, "lxml")
-            # print(soup.prettify())
             header = soup.find("table", {"class": "card"})
 
             header_list = []
@@ -88,8 +88,5 @@ class Competition:
 
                     if racer_class.full_name in [racer.full_name for racer in racer_list]:
                         racer_class.my_racer = True
-                        print(
-                            f'Printing result for race on {self.date} in {self.place} for category {self.category}')
-                        print(racer_class)
 
                     self.racer_list.append(racer_class)
