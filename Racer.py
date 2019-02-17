@@ -6,43 +6,28 @@ class Racer:
         self.gender = gender
         self.category = category
         self.country = country
+        self.sci_club = None
 
         self.start_number = None
         self.code = None
         self.position = None
+        self.position_in_year = None
         self.times = None
         self.points_earned = 0
-        self.sci_club = None
 
         self.my_racer = False
-        self.link_to_summary_page = ""
+        self.link_to_summary_page = None
 
-        self._without_time = False
-        self._additional_info = ""
+        self.without_time = False
+        self.additional_info = None
         # self.total_number_of_points += points
 
     def __str__(self):
-        if self._without_time:
-            return self.full_name + " -> " + str(self._additional_info)
+        if self.without_time:
+            return self.full_name + " -> " + str(self.additional_info)
         else:
             return self.full_name + " -> " + str(self.position)
 
     @property
     def full_name(self):
         return self.surname.capitalize() + " " + self.name.capitalize()
-
-    @property
-    def without_time(self):
-        return self._without_time
-
-    @without_time.setter
-    def without_time(self, value):
-        self._without_time = value
-
-    @property
-    def additional_info(self):
-        return self._additional_info
-
-    @additional_info.setter
-    def additional_info(self, value):
-        self._additional_info = value
