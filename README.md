@@ -32,10 +32,26 @@ Short        | Long             | Description
 -cb          | --combine_search | If you want to find racers by club, and add some racers from file at the same time. It removes duplicates automatically
 -rl          | --by_racers_list | If you want to specify list of racers, e.g. from multiple clubs_list, or compare specific people on one place
 
-Examples:
-* `pipenv run python ResultFinder.py -sc "AC UNIZA Žilina"`
+
+## Examples:
+* **Club names are from this sites**: 
+[Predžiaci](http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17.html)
+[Žiaci](http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18.html)
+
+* Find results for club AC UNIZA Žilina
+    * `pipenv run python ResultFinder.py -sc "AC UNIZA Žilina"`
+    * long:  `pipenv run python ResultFinder.py --ski_club_name "AC UNIZA Žilina"`
+   
+* Find results for club AC UNIZA Žilina combined with custom racers list txt file
 * `pipenv run python ResultFinder.py -sc "AC UNIZA Žilina" -cb`
+    * long: `pipenv run python ResultFinder.py --ski_club_name "AC UNIZA Žilina" -combine_search`
+    
+* You could also find results for multiple clubs in the same time
+* `pipenv run python ResultFinder.py -sc "AC UNIZA Žilina","LK Valčianska Dolina"
+
+* Find results for specific people just from txt file
 * `pipenv run python ResultFinder.py -rl`
+    * long: `pipenv run python ResultFinder.py --by_racers_list`
 
 ### Start the script
 Finally start the script with command:
