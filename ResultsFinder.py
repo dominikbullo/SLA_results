@@ -1,3 +1,4 @@
+import sys
 import requests
 
 from datetime import datetime
@@ -108,6 +109,18 @@ def find_racers_by_club(ski_club):
     # Slovenský pohár predžiactva
 
     racers_list = []
+    # TODO: Select category
+    # TODO: Collect links to categories for racers_with_club_and_points_list
+    link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare"
+    soup = BeautifulSoup(requests.get(link).content, "lxml")
+    data = soup.find("table", {"class": "list"})
+    years = data.findAll("td", {"class": "bold", "colspan": 4})
+
+    for x, year in enumerate([x.text for x in years]):
+        print(f'{x + 1} - {year}')
+    # print('Zoznam sezón, z ktorých je moŽné vyhľadávať:', *years, sep='\n- ')
+    x = input("Select number of session:\n")
+    print(x)
     racers_with_club_and_points_list = [
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
@@ -138,7 +151,7 @@ def find_racers_by_club(ski_club):
 
 
 def find_results(racers_list):
-    # TODO: remove duplicates from racers_list
+    # remove duplicates from racers_list
     clean_list = []
     for x, element in enumerate(racers_list):
         racers_list[x][0] = element[0].title()
@@ -171,10 +184,15 @@ if __name__ == "__main__":
                         help='If you want to find racers by club, and add some racers from file use this')
     parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
                         help='If you want to specify list of racers, e.g. from multiple clubs_list')
+    parser.add_argument('-t', '--test', action='store_true', default=True)
     args = parser.parse_args()
 
     racers = []
-
+    if args.test:
+        for club in args.ski_club_name.split(","):
+            find_racers_by_club(club)
+        sys.exit(0)
+        
     if args.by_racers_list or args.combine_search:
         try:
             with open('racers_to_find_list.txt', 'r', encoding='utf-8-sig')as f:
@@ -185,9 +203,8 @@ if __name__ == "__main__":
             print('fCannot read {f.name}')
 
     if not args.by_racers_list and args.ski_club_name is not None:
-        clubs_list = args.ski_club_name.split(",")
 
-        for club in clubs_list:
+        for club in args.ski_club_name.split(","):
             if not find_club_name_in_database(ski_club_name=club):
                 club = input("Insert the proper name of ski club for which you want to find results")
 
