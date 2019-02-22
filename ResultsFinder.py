@@ -1,8 +1,9 @@
 import sys
-import requests
-
 from datetime import datetime
+
+import requests
 from bs4 import BeautifulSoup
+
 from Competition import Competition
 from Racer import Racer
 
@@ -44,7 +45,62 @@ class ResultsFinder:
     def write_results_into_excel(self):
         from ExcelWriter import ExcelWriter
         writter = ExcelWriter(self.competition_list)
-        # writter.write_into_excel()
+    # writter.write_into_excel()
+
+
+def find_racers_by_club(ski_club):
+    # TODO: from this address get clubs and racers http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare
+    # table.list td.bold colspan="4"
+    # Slovenský pohár žiactva
+    # Slovenský pohár predžiactva
+
+    racers_list = []
+    # TODO: Select category
+    # TODO: Collect links to categories for racers_with_club_and_points_list
+    link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare"
+    soup = BeautifulSoup(requests.get(link).content, "lxml")
+    data = soup.find("table", {"class": "list"})
+
+    years = data.findAll("td", {"class": "bold", "colspan": 4})
+    categories = data.findAll("td", {"class": "no-wrap"})
+
+    # TODO: Competitons types better selecting
+    competitions_types_list = []
+    [competitions_types_list.append(x) for x in list(set(categories)) if not str(x.text).startswith('ROSSIGNOL')]
+
+    selected_year = validate_selected_user_input(years, text="Select number of session", default=1) - 1
+    selected_category = validate_selected_user_input(competitions_types_list, text="Select number of cup",
+                                                     default=1) - 1
+
+    print(f'You selected {years[selected_year].text} and {competitions_types_list[selected_category].text}')
+
+    racers_with_club_and_points_list = [
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:L.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:M.html",
+        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:L.html"]
+    gender = None
+    for link in racers_with_club_and_points_list:
+        gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
+    soup = BeautifulSoup(requests.get(link).content, "lxml")
+    content = soup.find("table", {"class": "list"})
+    for row in content.findChildren('tr'):
+        # DANGEROUS but fast
+        try:
+            test = row.findChildren('td')
+            for cell in test[4]:
+                if str(cell.string).capitalize() == ski_club.capitalize() and gender is not None:
+                    racers_list.append([test[2].text, test[3].text, gender])
+        except IndexError:
+            pass
+            continue
+
+    print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *racers_list, sep='\n- ')
+    return racers_list
 
 
 def create_racers_list(racers_list_to_create):
@@ -89,6 +145,34 @@ def create_racers_list(racers_list_to_create):
     return my_racers_list
 
 
+def validate_selected_user_input(valid_items_list, text="", default=1):
+    # bcs 0 for exit
+    length_of_list = len(valid_items_list) + 1
+
+    for x, item in enumerate([x.text for x in valid_items_list]):
+        print(f'{x + 1} - {item}')
+
+    def validate(item):
+        if length_of_list >= item > 0:
+            return True
+        return False
+
+    while True:
+        try:
+            user_input = input(str(text) + "\n")
+            # exit if 0
+            if user_input == 0:
+                print(f'You select 0 -> exit program')
+                sys.exit(0)
+            if user_input == '':
+                user_input = default
+            if validate(int(user_input)):
+                break
+        except ValueError:
+            print("Error: Invalid number")
+    return user_input
+
+
 def find_competitions_links(start_number, number_of_rounds):
     competitions_links_list = []
     link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/detail$"
@@ -100,54 +184,6 @@ def find_competitions_links(start_number, number_of_rounds):
 def find_club_name_in_database(ski_club_name):
     # TODO: database of clubs_list into text file, to check if club is good or wrong spelled
     return True
-
-
-def find_racers_by_club(ski_club):
-    # TODO: from this address get clubs and racers http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare
-    # table.list td.bold colspan="4"
-    # Slovenský pohár žiactva
-    # Slovenský pohár predžiactva
-
-    racers_list = []
-    # TODO: Select category
-    # TODO: Collect links to categories for racers_with_club_and_points_list
-    link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare"
-    soup = BeautifulSoup(requests.get(link).content, "lxml")
-    data = soup.find("table", {"class": "list"})
-    years = data.findAll("td", {"class": "bold", "colspan": 4})
-
-    for x, year in enumerate([x.text for x in years]):
-        print(f'{x + 1} - {year}')
-    # print('Zoznam sezón, z ktorých je moŽné vyhľadávať:', *years, sep='\n- ')
-    x = input("Select number of session:\n")
-    print(x)
-    racers_with_club_and_points_list = [
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:M.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:SP:L.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:M.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:L.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:M.html",
-        "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:L.html"]
-
-    for link in racers_with_club_and_points_list:
-        gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
-        soup = BeautifulSoup(requests.get(link).content, "lxml")
-        content = soup.find("table", {"class": "list"})
-        for row in content.findChildren('tr'):
-            # DANGEROUS but fast
-            try:
-                test = row.findChildren('td')
-                for cell in test[4]:
-                    if str(cell.string).capitalize() == ski_club.capitalize():
-                        racers_list.append([test[2].text, test[3].text, gender])
-            except IndexError:
-                pass
-                continue
-
-    print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *racers_list, sep='\n- ')
-    return racers_list
 
 
 def find_results(racers_list):
@@ -192,7 +228,7 @@ if __name__ == "__main__":
         for club in args.ski_club_name.split(","):
             find_racers_by_club(club)
         sys.exit(0)
-        
+
     if args.by_racers_list or args.combine_search:
         try:
             with open('racers_to_find_list.txt', 'r', encoding='utf-8-sig')as f:
