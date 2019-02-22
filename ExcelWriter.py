@@ -2,7 +2,10 @@ class ExcelWriter:
     def __init__(self, competitions_list):
         self.competitions_list = competitions_list
         pass
-#
+
+    def write_into_excel(self):
+        pass
+    
 #     esults_of_racers_test = racers_list_with_results
 #     import xlsxwriter
 #     start_row = 3  # must be >= 3
