@@ -24,7 +24,6 @@ class ResultsFinder:
                 result = competition_class.ResultsList(
                     link='http://www.slovak-ski.sk/zjazdove-lyzovanie/podujatia/' + link['href'])
 
-                # TODO: fill results for my child immediately when searching for every result
                 competition_class.results_list.append(result)
                 competition_class.date = result.date
                 competition_class.place = result.place
@@ -103,10 +102,11 @@ def find_club_name_in_database(ski_club_name):
 
 
 def find_racers_by_club(ski_club):
-    # "žiaci":"http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18.html"
-    # "predžiaci": "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17.html"
-    # "zapocitane", http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/zapoctene$17.html
-    # TODO: find racers_with_club_and_points_list by given urls
+    # TODO: from this address get clubs and racers http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare
+    # table.list td.bold colspan="4"
+    # Slovenský pohár žiactva
+    # Slovenský pohár predžiactva
+
     racers_list = []
     racers_with_club_and_points_list = [
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
@@ -144,6 +144,7 @@ def find_results(racers_list):
         racers_list[x][0] = element[0].title()
     [clean_list.append(x) for x in racers_list if x not in clean_list]
 
+    # TODO: think about categories -> input from user
     categories = {
         "Predžiaci": find_competitions_links(651, 8),
         "Žiaci": find_competitions_links(645, 6)
