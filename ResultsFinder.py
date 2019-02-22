@@ -45,7 +45,7 @@ class ResultsFinder:
     def write_results_into_excel(self):
         from ExcelWriter import ExcelWriter
         writter = ExcelWriter(self.competition_list)
-    # writter.write_into_excel()
+        # writter.write_into_excel()
 
 
 def find_racers_by_club(ski_club):
@@ -101,7 +101,7 @@ def find_racers_by_club(ski_club):
                 pass
                 continue
 
-    print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *racers_list, sep='\n- ')
+    print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *[x[0] for x in racers_list], sep='\n- ')
     return racers_list
 
 
