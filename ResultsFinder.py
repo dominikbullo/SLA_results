@@ -50,30 +50,33 @@ class ResultsFinder:
 
 def find_racers_by_club(ski_club):
     # TODO: from this address get clubs and racers http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare
-    # table.list td.bold colspan="4"
-    # Slovenský pohár žiactva
-    # Slovenský pohár predžiactva
 
     racers_list = []
-    # TODO: Select category
-    # TODO: Collect links to categories for racers_with_club_and_points_list
     link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare"
     soup = BeautifulSoup(requests.get(link).content, "lxml")
     data = soup.find("table", {"class": "list"})
 
     years = data.findAll("td", {"class": "bold", "colspan": 4})
     categories = data.findAll("td", {"class": "no-wrap"})
+    # remove duplicates
+    categories = set(categories)
 
-    # TODO: Competitons types better selecting
-    competitions_types_list = []
-    [competitions_types_list.append(x) for x in list(set(categories)) if not str(x.text).startswith('ROSSIGNOL')]
+    # filter some cups
+    not_approved_cups = ["O putovný pohár Prezidenta SLA"]
+    [not_approved_cups.append(x.text) for x in categories if str(x.text).lower().startswith("rossignol")]
 
-    selected_year = validate_selected_user_input(years, text="Select number of session", default=1) - 1
-    selected_category = validate_selected_user_input(competitions_types_list, text="Select number of cup",
+    # lowering all strings in array
+    not_approved_cups = [str(x).lower() for x in not_approved_cups]
+
+    approved_cups = [x for x in categories if str(x.text).lower() not in not_approved_cups]
+
+    selected_year = validate_selected_user_input(years, text="Select number of session:", default=1) - 1
+    selected_category = validate_selected_user_input(approved_cups, text="Select number of cup:",
                                                      default=1) - 1
 
-    print(f'You selected {years[selected_year].text} and {competitions_types_list[selected_category].text}')
+    print(f'You selected {years[selected_year].text} and {approved_cups[selected_category].text}')
 
+    # TODO: base on selected year and category search for racers
     racers_with_club_and_points_list = [
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:M.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$17:MP:L.html",
@@ -83,21 +86,21 @@ def find_racers_by_club(ski_club):
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:MZ:L.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:M.html",
         "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare/jednotlivci$18:SZ:L.html"]
-    gender = None
+
     for link in racers_with_club_and_points_list:
         gender = str(str(link).rsplit(":", 1)[1]).split(".", 1)[0].upper()
-    soup = BeautifulSoup(requests.get(link).content, "lxml")
-    content = soup.find("table", {"class": "list"})
-    for row in content.findChildren('tr'):
-        # DANGEROUS but fast
-        try:
-            test = row.findChildren('td')
-            for cell in test[4]:
-                if str(cell.string).capitalize() == ski_club.capitalize() and gender is not None:
-                    racers_list.append([test[2].text, test[3].text, gender])
-        except IndexError:
-            pass
-            continue
+        soup = BeautifulSoup(requests.get(link).content, "lxml")
+        content = soup.find("table", {"class": "list"})
+        for row in content.findChildren('tr'):
+            # DANGEROUS but fast
+            try:
+                test = row.findChildren('td')
+                for cell in test[4]:
+                    if str(cell.string).capitalize() == ski_club.capitalize() and gender is not None:
+                        racers_list.append([test[2].text, test[3].text, gender])
+            except IndexError:
+                pass
+                continue
 
     print('Zoznam nájdených pretekárov podľa klubu (ak majú body):', *racers_list, sep='\n- ')
     return racers_list
@@ -147,7 +150,7 @@ def create_racers_list(racers_list_to_create):
 
 def validate_selected_user_input(valid_items_list, text="", default=1):
     # bcs 0 for exit
-    length_of_list = len(valid_items_list) + 1
+    length_of_list = len(valid_items_list)
 
     for x, item in enumerate([x.text for x in valid_items_list]):
         print(f'{x + 1} - {item}')
@@ -170,7 +173,7 @@ def validate_selected_user_input(valid_items_list, text="", default=1):
                 break
         except ValueError:
             print("Error: Invalid number")
-    return user_input
+    return int(user_input)
 
 
 def find_competitions_links(start_number, number_of_rounds):
@@ -220,7 +223,7 @@ if __name__ == "__main__":
                         help='If you want to find racers by club, and add some racers from file use this')
     parser.add_argument('-rl', '--by_racers_list', action='store_true', default=False,
                         help='If you want to specify list of racers, e.g. from multiple clubs_list')
-    parser.add_argument('-t', '--test', action='store_true', default=True)
+    parser.add_argument('-t', '--test', action='store_false', default=True)
     args = parser.parse_args()
 
     racers = []
