@@ -49,8 +49,6 @@ class ResultsFinder:
 
 
 def find_racers_by_club(ski_club):
-    # TODO: from this address get clubs and racers http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare
-
     racers_list = []
     link = "http://www.slovak-ski.sk/zjazdove-lyzovanie/pohare"
     soup = BeautifulSoup(requests.get(link).content, "lxml")
@@ -58,18 +56,19 @@ def find_racers_by_club(ski_club):
 
     years = data.findAll("td", {"class": "bold", "colspan": 4})
     categories = data.findAll("td", {"class": "no-wrap"})
+
     # remove duplicates
     categories = set(categories)
 
     # filter some cups
     not_approved_cups = ["O putovný pohár Prezidenta SLA"]
     [not_approved_cups.append(x.text) for x in categories if str(x.text).lower().startswith("rossignol")]
-
     # lowering all strings in array
     not_approved_cups = [str(x).lower() for x in not_approved_cups]
 
     approved_cups = [x for x in categories if str(x.text).lower() not in not_approved_cups]
 
+    # user inputs
     selected_year = validate_selected_user_input(years, text="Select number of session:", default=1) - 1
     selected_category = validate_selected_user_input(approved_cups, text="Select number of cup:",
                                                      default=1) - 1
