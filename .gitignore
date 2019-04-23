@@ -112,7 +112,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-/Výsledky AC_UNIZA 2018-2019.xlsx
-/Výsledky_AC UNIZA.xlsx
+/Výsledky AC_UNIZA*
+/Výsledky_AC UNIZA*
 /zisti_vysledky_SLA_backup.py
 /racers_to_find_list.txt
