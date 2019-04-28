@@ -44,8 +44,8 @@ class ResultsFinder:
 
     def write_results_into_excel(self):
         from ExcelWriter import ExcelWriter
-        writter = ExcelWriter(self.competition_list)
-        writter.write_into_excel(self.racer_list)
+        writer = ExcelWriter(self.competition_list)
+        writer.write_into_excel(self.racer_list)
 
 
 def find_racers_by_club(ski_club):
@@ -206,7 +206,8 @@ def find_results(racers_list):
         finder = ResultsFinder(competition_links, create_racers_list(racers_list))
         finder.create_competitions_list_with_results()
         finder.print_results_list()
-        finder.write_results_into_excel()
+
+    finder.write_results_into_excel()
 
 
 if __name__ == "__main__":

@@ -1,19 +1,27 @@
-TAMÁŠI Evelína, 2013, L
-CSÓKÁS Adam, 2013, M
-HRNČIAROVÁ Mária, 2011, L
-TAMÁŠI Liana, 2011, L
-RITNOŠIKOVÁ Jela, 2011, L
-BADR Theo, 2011, M
-CSÓKÁS Andrej, 2010, M
-JANČEK Matias, 2009, M
-JANČEK Matias, 2009, M
-Krištofík Milan, 2009, M
-SERVOVA Nelka, 2009, L
-KANDERA Matea, 2009, L
-HIRNEROVÁ Romana, 2008, L
-BELINSKÁ Zuzana, 2007, L
-HOFEROVÁ Simona, 2007, L
-VAŠKOVÁ Emily, 2007, L
-GORDÍKOVÁ Angela, 2006, L
-MIHOČKO Oliver, 2006, M
-VANTAROVÁ Rebeka, 2004, L
+SÝKORA Dávid ,2014 ,m
+SEIFERTOVÁ Zara,2013,z
+KIKLOŠ Samuel,2013,m
+TAMÁŠI Evelína,2013,Z
+CSÓKÁS Adam,2013,M
+NOVÁK Michaela,2012,Z
+HRNČIAROVÁ Mária,2011,z
+VAŠKOVÁ Amely,2011,z
+TAMÁŠI Liana,2011,z
+RITNOŠIKOVÁ Jela,2011,z
+BADR Theo,2011,m
+CSÓKÁS Andrej,2010,m
+JANČEK Matias,2009,m
+KRIŠTOFÍK Milan,2009,m
+KANDERA Matea,2009,z
+HIRNEROVÁ Romana,2008,z
+BELINSKÁ Zuzana,2007,z
+VAŠKOVÁ Emily,2007,z
+GORDÍKOVÁ Angela,2006,z
+KUREJOVÁ Diana,2006,z
+MIHOČKO Oliver,2006,m
+DANAJOVÁ Timea,2006,z
+VAŠKO Igor,2005,m
+JANČEKOVÁ Viktória,2005,z
+ĎATKO Jakub,2004,m
+VANTAROVÁ Rebeka,2004,z
+KANDERA Bruno,2003,m

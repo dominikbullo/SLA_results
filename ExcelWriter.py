@@ -7,9 +7,6 @@ class ExcelWriter:
         pass
 
     def write_into_excel(self, racer_list):
-        # raise Exception("write_into_excel: Not implemented yet!")
-        # pass
-
         import xlsxwriter
         start_row = 3  # must be >= 3
         file = "Výsledky AC_UNIZA %s-%s -- test.xlsx" % (datetime.now().year - 1, datetime.now().year)
@@ -64,9 +61,11 @@ class ExcelWriter:
                 column_headers = 0
                 worksheet.write(start_row - 3, column_headers, str(name_formated))
 
-                # worksheet.write(start_row - 1, column_headers, "Sezóna " + str(MP + 7) + "/" + str(MP + 8))
-                # worksheet.write(start_row - 1, column_headers + 1, str(racers_list_with_results[index][0][5]),
-                #                 cell_format_header)
+                worksheet.write(start_row - 1, column_headers, "Sezóna " +
+                                str(datetime.now().year - 1) + "!" +
+                                str(datetime.now().year))
+                worksheet.write(start_row - 1, column_headers + 1, str(racer.category),
+                                cell_format_header)
                 worksheet.write(start_row, column_headers, "Miesto konania: ")
                 worksheet.write(start_row + 1, column_headers, "Dátum konania: ")
                 worksheet.write(start_row + 3, column_headers, "Meno najlepšieho: ")
