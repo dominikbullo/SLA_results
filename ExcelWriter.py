@@ -10,20 +10,11 @@ class ExcelWriter:
         import xlsxwriter
         start_row = 3  # must be >= 3
         file = "Výsledky AC_UNIZA %s-%s -- test.xlsx" % (datetime.now().year - 1, datetime.now().year)
-        #
+
         my_worksheets = {}
         workbook = xlsxwriter.Workbook(file)
-        #
-        format1 = workbook.add_format({'bg_color': '#FFC7CE',
-                                       'font_color': '#9C0006'})
-        format2 = workbook.add_format({'bg_color': '#C6EFCE',
-                                       'font_color': '#006100'})
-        merge_format = workbook.add_format({
-            'bold': 1,
-            'border': 1,
-            'align': 'center',
-            'valign': 'vcenter',
-            'fg_color': '#00b0f0'})
+
+        format1, format2, merge_format = self.formats(workbook)
 
         for index, racer in enumerate(racer_list):
             name_formated = racer.surname.upper() + " " + racer.name.title()
@@ -37,59 +28,70 @@ class ExcelWriter:
                 worksheet = workbook.add_worksheet(name_formated)
                 my_worksheets[worksheet.get_name()] = [worksheet.get_name(), 1]
 
+            # TODO: for every racer ->
+            # write headers
+            # Write competitions
+            # write result
             column = my_worksheets[worksheet.get_name()][1]
 
             if column == 1:
-                worksheet.conditional_format(start_row + 7, 1, start_row + 7, 17, {'type': 'cell',
-                                                                                   'criteria': '>',
-                                                                                   'value': "10%",
-                                                                                   'format': format1})
-                worksheet.conditional_format(start_row + 7, 1, start_row + 7, 17, {'type': 'cell',
-                                                                                   'criteria': '>',
-                                                                                   'value': 0,
-                                                                                   'format': format2})
+                self.write_headers(format1, format2, name_formated, racer, start_row, workbook, worksheet)
 
-                fmt = workbook.add_format(
-                    {'num_format': '0.00%', 'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
-                worksheet.set_row(start_row + 7, cell_format=fmt)
-
-                cell_format_wrap = workbook.add_format({'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
-                worksheet.set_column("B:Z", width=13.43, cell_format=cell_format_wrap)
-
-                cell_format_header = workbook.add_format({'bold': True, 'font_size': 12})
-                worksheet.set_column("A:A", width=30, cell_format=cell_format_header)
-                column_headers = 0
-                worksheet.write(start_row - 3, column_headers, str(name_formated))
-
-                worksheet.write(start_row - 1, column_headers, "Sezóna " +
-                                str(datetime.now().year - 1) + "!" +
-                                str(datetime.now().year))
-                worksheet.write(start_row - 1, column_headers + 1, str(racer.category),
-                                cell_format_header)
-                worksheet.write(start_row, column_headers, "Miesto konania: ")
-                worksheet.write(start_row + 1, column_headers, "Dátum konania: ")
-                worksheet.write(start_row + 3, column_headers, "Meno najlepšieho: ")
-                worksheet.write(start_row + 4, column_headers, "Najlepší čas: ")
-                worksheet.write(start_row + 5, column_headers, "Čas porov. pretekára: ")
-                worksheet.write(start_row + 6, column_headers, "Časová strata ")
-                worksheet.write(start_row + 7, column_headers, "% strata ", cell_format_header)
-                worksheet.write(start_row + 8, column_headers, "Umiestnenie ")
-                worksheet.write(start_row + 9, column_headers, "Celkový počet pretekárov ")
+            if column % 2 == 0 and column > 1:
+                worksheet.merge_range(start_row, column - 1, start_row, column, str(racer.name),
+                                      merge_format)
+                worksheet.merge_range(start_row + 1, column - 1, start_row + 1, column,
+                                      str(racer.surname), merge_format)
 
         workbook.close();
 
-    # aaa = [x for x in racers_list if name_formated.lower() in x]
-    # try:
-    #     worksheet.write(start_row - 3, column_headers + 1, str(aaa[0][1]), cell_format_header)
-    #     kategoria = 2015
-    #     if aaa[0][3] == "Staršie žiactvo":
-    #         kategoria = SZ
-    #     if aaa[0][3] == "Mladšie žiactvo":
-    #         kategoria = MZ
-    #     if aaa[0][3] == "Staršie predžiactvo":
-    #         kategoria = SP
-    #     if aaa[0][3] == "Mladšie predžiactvo":
-    #         kategoria = MP
+    @staticmethod
+    def formats(workbook):
+        format1 = workbook.add_format({'bg_color': '#FFC7CE',
+                                       'font_color': '#9C0006'})
+        format2 = workbook.add_format({'bg_color': '#C6EFCE',
+                                       'font_color': '#006100'})
+        merge_format = workbook.add_format({
+            'bold': 1,
+            'border': 1,
+            'align': 'center',
+            'valign': 'vcenter',
+            'fg_color': '#00b0f0'})
+        return format1, format2, merge_format
+
+    @staticmethod
+    def write_headers(format1, format2, name_formated, racer, start_row, workbook, worksheet):
+        worksheet.conditional_format(start_row + 7, 1, start_row + 7, 17, {'type': 'cell',
+                                                                           'criteria': '>',
+                                                                           'value': "10%",
+                                                                           'format': format1})
+        worksheet.conditional_format(start_row + 7, 1, start_row + 7, 17, {'type': 'cell',
+                                                                           'criteria': '>',
+                                                                           'value': 0,
+                                                                           'format': format2})
+        fmt = workbook.add_format(
+            {'num_format': '0.00%', 'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
+        worksheet.set_row(start_row + 7, cell_format=fmt)
+        cell_format_wrap = workbook.add_format({'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
+        worksheet.set_column("B:Z", width=13.43, cell_format=cell_format_wrap)
+        cell_format_header = workbook.add_format({'bold': True, 'font_size': 12})
+        worksheet.set_column("A:A", width=30, cell_format=cell_format_header)
+        column_headers = 0
+        worksheet.write(start_row - 3, column_headers, str(name_formated))
+        worksheet.write(start_row - 1, column_headers, "Sezóna " +
+                        str(datetime.now().year - 1) + "!" +
+                        str(datetime.now().year))
+        worksheet.write(start_row - 1, column_headers + 1, str(racer.category),
+                        cell_format_header)
+        worksheet.write(start_row, column_headers, "Miesto konania: ")
+        worksheet.write(start_row + 1, column_headers, "Dátum konania: ")
+        worksheet.write(start_row + 3, column_headers, "Meno najlepšieho: ")
+        worksheet.write(start_row + 4, column_headers, "Najlepší čas: ")
+        worksheet.write(start_row + 5, column_headers, "Čas porov. pretekára: ")
+        worksheet.write(start_row + 6, column_headers, "Časová strata ")
+        worksheet.write(start_row + 7, column_headers, "% strata ", cell_format_header)
+        worksheet.write(start_row + 8, column_headers, "Umiestnenie ")
+        worksheet.write(start_row + 9, column_headers, "Celkový počet pretekárov ")
 
     #     pocet_rokov_v_kat = kategoria - datetime.strptime(aaa[0][1], '%d.%m.%Y').year + 1
     #     worksheet.merge_range(start_row - 3, column_headers + 2, start_row - 3, column_headers + 3,
@@ -98,21 +100,6 @@ class ExcelWriter:
     # print(e)
     # pass
 
-    # worksheet.write(start_row - 1, column_headers, "Sezóna " + str(MP + 7) + "/" + str(MP + 8))
-    # worksheet.write(start_row - 1, column_headers + 1, str(racers_list_with_results[index][0][5]),
-    #                 cell_format_header)
-    # worksheet.write(start_row, column_headers, "Miesto konania: ")
-    # worksheet.write(start_row + 1, column_headers, "Dátum konania: ")
-    # worksheet.write(start_row + 3, column_headers, "Meno najlepšieho: ")
-    # worksheet.write(start_row + 4, column_headers, "Najlepší čas: ")
-    # worksheet.write(start_row + 5, column_headers, "Čas porov. pretekára: ")
-    # worksheet.write(start_row + 6, column_headers, "Časová strata ")
-    # worksheet.write(start_row + 7, column_headers, "% strata ", cell_format_header)
-    # worksheet.write(start_row + 8, column_headers, "umiestnenie ")
-    #     worksheet.write(start_row + 9, column_headers, "celkový počet pretekárov ")
-    # write_headers_to_EXCEL(workbook.add_format({'bold': 1}),
-    #                        cell_format_header, index, name_formated, racers_list_with_results, start_row,
-    #                                    worksheet)
     #
     #         if column % 2 == 0 and column > 1:
     #             worksheet.merge_range(start_row, column - 1, start_row, column, str(racers_list_with_results[index][0][0]),
@@ -206,39 +193,3 @@ class ExcelWriter:
     #         print(colored("Nepodarilo sa uložiť, dokument sa používa", "red"), e)
     #
     #
-    # def write_headers_to_EXCEL(merge_format, cell_format_header, index, name_formated, racers_list_with_results, start_row,
-    #                            worksheet):
-    #     column_headers = 0
-    #     worksheet.write(start_row - 3, column_headers, str(name_formated))
-    #
-    #     aaa = [x for x in racers_list if name_formated.lower() in x]
-    #     try:
-    #         worksheet.write(start_row - 3, column_headers + 1, str(aaa[0][1]), cell_format_header)
-    #         kategoria = 2015
-    #         if aaa[0][3] == "Staršie žiactvo":
-    #             kategoria = SZ
-    #         if aaa[0][3] == "Mladšie žiactvo":
-    #             kategoria = MZ
-    #         if aaa[0][3] == "Staršie predžiactvo":
-    #             kategoria = SP
-    #         if aaa[0][3] == "Mladšie predžiactvo":
-    #             kategoria = MP
-    #
-    #         pocet_rokov_v_kat = kategoria - datetime.strptime(aaa[0][1], '%d.%m.%Y').year + 1
-    #         worksheet.merge_range(start_row - 3, column_headers + 2, start_row - 3, column_headers + 3,
-    #                               str(pocet_rokov_v_kat) + ". rok v kategorií", merge_format)
-    #     except Exception as e:
-    #         print(e)
-    #         pass
-    #
-    #     worksheet.write(start_row - 1, column_headers, "Sezóna " + str(MP + 7) + "/" + str(MP + 8))
-    #     worksheet.write(start_row - 1, column_headers + 1, str(racers_list_with_results[index][0][5]), cell_format_header)
-    #     worksheet.write(start_row, column_headers, "Miesto konania: ")
-    #     worksheet.write(start_row + 1, column_headers, "Dátum konania: ")
-    #     worksheet.write(start_row + 3, column_headers, "Meno najlepšieho: ")
-    #     worksheet.write(start_row + 4, column_headers, "Najlepší čas: ")
-    #     worksheet.write(start_row + 5, column_headers, "Čas porov. pretekára: ")
-    #     worksheet.write(start_row + 6, column_headers, "Časová strata ")
-    #     worksheet.write(start_row + 7, column_headers, "% strata ", cell_format_header)
-    #     worksheet.write(start_row + 8, column_headers, "umiestnenie ")
-    #     worksheet.write(start_row + 9, column_headers, "celkový počet pretekárov ")
