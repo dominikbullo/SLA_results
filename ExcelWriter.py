@@ -8,7 +8,6 @@ class ExcelWriter:
 
     def write_into_excel(self, racer_list):
         import xlsxwriter
-        start_row = 3  # must be >= 3
         file = "Výsledky AC_UNIZA %s-%s -- test.xlsx" % (datetime.now().year - 1, datetime.now().year)
 
         my_worksheets = {}
@@ -16,32 +15,75 @@ class ExcelWriter:
 
         format1, format2, merge_format = self.formats(workbook)
 
+        # for every race format name
         for index, racer in enumerate(racer_list):
+            column = 1  # must be >= 3
+
             name_formated = racer.surname.upper() + " " + racer.name.title()
 
+            # Check if workbook exist -> it shouldn't
             existing_ws = workbook.get_worksheet_by_name(name_formated)
 
             if existing_ws:
-                worksheet = existing_ws
-                my_worksheets[worksheet.get_name()][1] += 1
+                actual_worksheet = existing_ws
+                # my_worksheets[actual_worksheet.get_name()][1] += 1
             else:
-                worksheet = workbook.add_worksheet(name_formated)
-                my_worksheets[worksheet.get_name()] = [worksheet.get_name(), 1]
+                actual_worksheet = workbook.add_worksheet(name_formated)
+                # my_worksheets[actual_worksheet.get_name()] = [actual_worksheet.get_name(), 1]
 
             # TODO: for every racer ->
             # write headers
             # Write competitions
             # write result
-            column = my_worksheets[worksheet.get_name()][1]
+            self.write_headers(format1, format2, name_formated, racer, 3, workbook, actual_worksheet)
 
-            if column == 1:
-                self.write_headers(format1, format2, name_formated, racer, start_row, workbook, worksheet)
+            for competition in self.competitions_list:
+                for result_list in competition.results_list:
+                    my_results = [x for x in result_list.racer_list if x.my_racer]
 
-            if column % 2 == 0 and column > 1:
-                worksheet.merge_range(start_row, column - 1, start_row, column, str(racer.name),
-                                      merge_format)
-                worksheet.merge_range(start_row + 1, column - 1, start_row + 1, column,
-                                      str(racer.surname), merge_format)
+                row = 3  # must be >= 3
+                # TODO: for cyklus pre všetky udaje ktore dam, keď budú v poradí, tak si bude posúvať riadky a pod
+
+                actual_worksheet.merge_range(row, column, row, column + 1, competition.place, merge_format)
+
+                row += 1
+                # Datum konania
+                actual_worksheet.merge_range(row, column, row, column + 1, competition.date, merge_format)
+
+                myformat = workbook.add_format({'bold': True, 'font_size': 12, 'fg_color': '#00b0f0', 'border': True})
+
+                row += 1
+                actual_worksheet.write(row, column, "Celkovo(SVK)", myformat)
+                actual_worksheet.write(row, column + 1, "Ročník(SVK)", myformat)
+
+                # TODO get first racer in competition
+                row += 1
+                actual_worksheet.write(row, column, "Meno najlepšieho nei je zatiaľ")
+
+                row += 1
+                actual_worksheet.write(row, column, "čas najlepšieho nie je zatiaľ")
+
+                row += 1
+                actual_worksheet.write(row, column, "čas")
+
+                row += 1
+                actual_worksheet.write(row, column, "časová strata")
+
+                row += 1
+                actual_worksheet.write(row, column, "% strata")
+
+                row += 1
+                actual_worksheet.write(row, column, str(racer.position))
+                actual_worksheet.write(row, column + 1, str(racer.position_in_year))
+
+                row += 1
+                # TODO index and get result list with this racer
+                # actual_worksheet.write(row, column, len(competition.results_list[0]))
+
+                row += 1
+                actual_worksheet.write(row, column, str(racer.start_number))
+
+                column += 2
 
         workbook.close();
 
@@ -79,7 +121,7 @@ class ExcelWriter:
         column_headers = 0
         worksheet.write(start_row - 3, column_headers, str(name_formated))
         worksheet.write(start_row - 1, column_headers, "Sezóna " +
-                        str(datetime.now().year - 1) + "!" +
+                        str(datetime.now().year - 1) + "/" +
                         str(datetime.now().year))
         worksheet.write(start_row - 1, column_headers + 1, str(racer.category),
                         cell_format_header)
