@@ -2,7 +2,7 @@
 Simple program that search for result of my racers on page http://slovak-ski.sk.
 This repo is for my personal and school project, it is not coded for someone else...yet.
 
-Project is on developments...currently stopped, 
+Project is under developments...currently stopped, 
 because i have a lot of programming into school but I will look at this program as soon as i can.
 I think it will be after winter season about 04/2019
 
